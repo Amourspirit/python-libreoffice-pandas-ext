@@ -1,10 +1,10 @@
-# See: https://github.com/Amourspirit/python-libreoffice-pip/wiki/pyproject.toml
+# See: https://github.com/Amourspirit/python-libreoffice-pandas-ext/wiki/pyproject.toml
 [tool.oxt.config]
 auto_install_in_site_packages = true
 build_dir = "build"
-dist_dir = "tmp_dist" # should be changed to someting like dist, tmp_dist is not included in git
+dist_dir = "dist" # should be changed to someting like dist, tmp_dist is not included in git
 install_wheel = true
-oxt_name = "OooPip"
+oxt_name = "pandas"
 py_pkg_dir = "py_pkgs"
 py_pkg_files = []
 py_pkg_names = [] # ["ooodev", "ooo"]
@@ -23,22 +23,22 @@ default_locale = ["en", "US"]
 pip_wheel_url = "https://files.pythonhosted.org/packages/50/c2/e06851e8cc28dcad7c155f4753da8833ac06a5c704c109313b8d5a62968a/pip-23.2.1-py3-none-any.whl"
 test_internet_url = "https://duckduckgo.com"
 log_pip_installs = false
-lo_identifier = "org.openoffice.extensions.ooopip"
-lo_implementation_name = "OooPipRunner"
-display_name = "LibreOffice Python Pip Template"
-description = "Template for creating pip based extensions for for LibreOffice"
+lo_identifier = "org.openoffice.extensions.pandas"
+lo_implementation_name = "PandasRunner"
+display_name = "Pandas for LibreOffice"
+description = "Pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool."
 publisher = "AmourSpirit"
-publisher_url = "https://github.com/Amourspirit/python-libreoffice-pip"
-update_url_xml = "https://raw.githubusercontent.com/Amourspirit/python-libreoffice-pip/main/___dist_dir___/___update_file___"
-update_url_oxt = "https://raw.githubusercontent.com/Amourspirit/python-libreoffice-pip/main/___dist_dir___/___oxt_name___.oxt"
+publisher_url = "https://github.com/Amourspirit/python-libreoffice-pandas-ext"
+update_url_xml = "https://raw.githubusercontent.com/Amourspirit/python-libreoffice-pandas-ext/main/___dist_dir___/___update_file___"
+update_url_oxt = "https://raw.githubusercontent.com/Amourspirit/python-libreoffice-pandas-ext/main/___dist_dir___/___oxt_name___.oxt"
 url_pip = 'https://bootstrap.pypa.io/get-pip.py'
 # set log_file to "" to disable logging
-log_file = "pip_install.log"
-log_name = "OOO PIP Installer"
+log_file = "pandas_install.log"
+log_name = "Pandas Installer"
 log_level = "DEBUG" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
 log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 log_add_console = false # should be false for production
-lo_pip = "lo_pip"
+lo_pip = "lo_pandas"
 platform = "all"
 startup_event = "OnStartApp" # OnStartApp or onFirstVisibleTask
 show_progress = true
@@ -46,35 +46,35 @@ delay_startup = true # determines if installing waits fo the window to load befo
 
 [tool.oxt.requirements]
 # https://python-poetry.org/docs/dependency-specification/
-typing-extensions = ">=4.7.0"
-verr = ">=1.1.2"
+pandas = ">=2"
+odfpy = ">=1.4"
+ooo-dev-tools = ">=0.12.2"
 
 [tool.oxt.preinstall.pure]
 # verr = ">=1.1.2"
 
 [tool.oxt.locale.publisher]
 en = { name = "___publisher___", url="___publisher_url___" }
-fr = { name = "AmourEsprit", url="___publisher_url___/fr" }
 
 [tool.oxt.locale.name]
 en = "___display_name___"
-fr = "Modèle LibreOffice Python Pip"
-de = "LibreOffice Python Pip Vorlage"
-pt = "Modelo LibreOffice Python Pip"
-es = "Plantilla LibreOffice Python Pip"
+fr = "Pandas pour LibreOffice"
+de = "Pandas für LibreOffice"
+pt = "Pandas para LibreOffice"
+es = "Pandas para LibreOffice"
 
 [tool.oxt.locale.desc]
 en = "___description___"
-fr = "Modèle pour créer des extensions basées sur pip pour LibreOffice"
-de = "Vorlage zum Erstellen von pip-basierten Erweiterungen für LibreOffice"
-pt = "Modelo para criar extensões baseadas em pip para o LibreOffice"
-es = "Plantilla para crear extensiones basadas en pip para LibreOffice"
+fr = "Pandas est un outil d'analyse et de manipulation de données open source rapide, puissant, flexible et facile à utiliser."
+de = "Pandas ist ein schnelles, leistungsstarkes, flexibles und benutzerfreundliches Open-Source-Tool zur Datenanalyse und -manipulation."
+pt = "Pandas é uma ferramenta de análise e manipulação de dados de código aberto rápida, poderosa, flexível e fácil de usar."
+es = "Pandas es una herramienta de análisis y manipulación de datos de código abierto rápida, potente, flexible y fácil de usar."
 
 
 [tool.poetry]
-name = "libreoffice pip template"
+name = "lo_pandas_ext"
 version = "0.1.0"
-description = "Template for creating pip based extensions for for LibreOffice"
+description = "Pandas for LibreOffice"
 authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
 license = "MIT"
 readme = "README.md"
