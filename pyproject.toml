@@ -35,7 +35,7 @@ url_pip = 'https://bootstrap.pypa.io/get-pip.py'
 # set log_file to "" to disable logging
 log_file = "pandas_install.log"
 log_name = "Pandas Installer"
-log_level = "DEBUG" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
+log_level = "INFO" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
 log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 log_add_console = false # should be false for production
 lo_pip = "lo_pandas"
@@ -49,6 +49,7 @@ delay_startup = true # determines if installing waits fo the window to load befo
 pandas = ">=2"
 odfpy = ">=1.4"
 ooo-dev-tools = ">=0.12.2"
+
 
 [tool.oxt.preinstall.pure]
 # verr = ">=1.1.2"
@@ -73,7 +74,7 @@ es = "Pandas es una herramienta de análisis y manipulación de datos de código
 
 [tool.poetry]
 name = "lo_pandas_ext"
-version = "0.1.0"
+version = "1.0.0"
 description = "Pandas for LibreOffice"
 authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
 license = "MIT"
@@ -83,7 +84,6 @@ packages = [{ include = "src" }]
 [tool.poetry.dependencies]
 python = "^3.8"
 ooouno = "^2.1.2"
-ooo-dev-tools = "0.12.2"
 toml = "^0.10.2"
 
 
@@ -95,6 +95,7 @@ black = "^23.7.0"
 oooscript = "^1.1.3"
 oooenv = "^0.2.2"
 lxml = "^4.9.3"
+ooo-dev-tools = ">=0.12.2"
 
 [build-system]
 requires = ["poetry-core"]
