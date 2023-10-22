@@ -15,6 +15,7 @@ from ...oxt_logger import OxtLogger
 from ..download import Download
 from ..progress import Progress
 from ...lo_util.resource_resolver import ResourceResolver
+from ...bz2_config import BZ2Config
 
 
 # https://docs.python.org/3.8/library/importlib.metadata.html#module-importlib.metadata
@@ -111,8 +112,11 @@ class InstallPkg:
         elif self.flag_upgrade:
             cmd.append("--upgrade")
 
+        if not auto_target and self.config.is_win and len(self.config.isolate_windows) > 0:
+            auto_target = True
+
         if auto_target:
-            cmd.append(f"--target={self.config.site_packages}")
+            cmd.append(f"--target={self._get_package_target(pkg)}")
         elif self.config.is_user_installed:
             cmd.append("--user")
 
@@ -161,6 +165,16 @@ class InstallPkg:
             progress.kill()
 
         return result
+
+    def _get_package_target(self, pkg_name: str) -> str:
+        if not self._config.is_win:
+            return self.config.site_packages
+        if self.config.is_shared_installed or self.config.is_bundled_installed:
+            return self.config.site_packages
+        if pkg_name in self.config.isolate_windows:
+            cfg = BZ2Config()
+            return str(cfg.install_dir)
+        return self.config.site_packages
 
     def _get_env(self) -> Dict[str, str]:
         """

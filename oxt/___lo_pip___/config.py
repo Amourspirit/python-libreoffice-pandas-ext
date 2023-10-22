@@ -2,8 +2,7 @@
 # region Imports
 from __future__ import annotations
 from pathlib import Path
-from typing import Dict, List, TYPE_CHECKING
-import json
+from typing import Dict, List, Set, TYPE_CHECKING
 import os
 import sys
 import platform
@@ -559,6 +558,15 @@ class Config(metaclass=Singleton):
         This is the number of seconds to wait for the LibreOffice window to start before installing packages without requiring a LibreOffice window.
         """
         return self._basic_config.window_timeout
+
+    @property
+    def isolate_windows(self) -> Set[str]:
+        """
+        Gets the list of package that are to  be installed in 32 or 64 bit locations.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.isolate.windows)
+        """
+        return self._basic_config.isolate_windows
 
     # endregion Properties
 
