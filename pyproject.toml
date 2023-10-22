@@ -12,7 +12,7 @@ token_file_ext = ["txt", "xml", "xcu", "xcs"]
 update_file = "update.xml"
 zip_preinstall_pure = true
 window_timeout = 5 # number of seconds to wait for window to appear
-dialog_desktop_owned = true # determines if the dialog is owned by the desktop window
+dialog_desktop_owned = false # determines if the dialog is owned by the desktop window
 resource_dir_name = "resources"
 resource_properties_prefix = "pipstrings"
 default_locale = ["en", "US"]
@@ -45,17 +45,32 @@ show_progress = true
 delay_startup = true # determines if installing waits fo the window to load before installing
 
 [tool.oxt.requirements]
-# https://python-poetry.org/docs/dependency-specification/
 pandas = ">=2"
 odfpy = ">=1.4"
 ooo-dev-tools = ">=0.12.2"
 
+[tool.oxt.isolate]
+windows = ["pandas", "odfpy"]
 
 [tool.oxt.preinstall.pure]
 # verr = ">=1.1.2"
 
 [tool.oxt.locale.publisher]
 en = { name = "___publisher___", url="___publisher_url___" }
+
+[tool.oxt.bz2.32_bit]
+"3.8" = { url = "https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-win32.zip", md5="659adf421e90fba0f56a9631f79e70fb" }
+"3.9" = { url = "https://www.python.org/ftp/python/3.9.13/python-3.9.13-embed-win32.zip", md5="fec0bc06857502a56dd1aeaea6488ef8" }
+"3.10" = { url = "https://www.python.org/ftp/python/3.10.11/python-3.10.11-embed-win32.zip", md5="fee70dae06c25c60cbe825d6a1bfda57" }
+"3.11" = { url = "https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-win32.zip", md5="d035d12d72e2d62b6e5219ea8f3bda39" }
+"3.12" = { url = "https://www.python.org/ftp/python/3.12.0/python-3.12.0rc3-embed-win32.zip", md5="b6ed11598c929af946a110ca4db0d95c" }
+
+[tool.oxt.bz2.64_bit]
+"3.8" = { url = "https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip", md5="3acb1d7d9bde5a79f840167b166bb633" }
+"3.9" = { url = "https://www.python.org/ftp/python/3.9.13/python-3.9.13-embed-amd64.zip", md5="57731cf80b1c429a0be7133266d7d7cf" }
+"3.10" = { url = "https://www.python.org/ftp/python/3.10.11/python-3.10.11-embed-amd64.zip", md5="f1c0538b060e03cbb697ab3581cb73bc" }
+"3.11" = { url = "https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-amd64.zip", md5="ff5f34b8d2504c49fc94ffc29998b8a0" }
+"3.12" = { url = "https://www.python.org/ftp/python/3.12.0/python-3.12.0rc3-embed-arm64.zip", md5="728cbbfd0d5fc485233e1aba7884a773" }
 
 [tool.oxt.locale.name]
 en = "___display_name___"

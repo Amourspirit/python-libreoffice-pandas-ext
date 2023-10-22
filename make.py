@@ -4,6 +4,7 @@ import sys
 import argparse
 from src.build import Build
 from src.build_args import BuildArgs
+from src.security import md5_ops
 
 
 # region Args Parse
@@ -17,6 +18,8 @@ def _create_parser(name: str) -> argparse.ArgumentParser:
 def _args_process_cmd(args: argparse.Namespace) -> None:
     if args.command == "build":
         _args_action_build(args=args)
+    elif args.command == "md5":
+        _args_action_md5(args=args)
 
 
 # endregion commands
@@ -33,6 +36,10 @@ def _args_action_build(args: argparse.Namespace) -> None:
     print("Processing...", end="", flush=True)
     builder.build()
     print("Done!")
+
+
+def _args_action_md5(args: argparse.Namespace) -> None:
+    print(md5_ops.get_md5_binary(fnm=args.binary_file))
 
 
 def _args_add_sub_build(parser: argparse.ArgumentParser) -> None:
@@ -69,6 +76,17 @@ def _args_add_sub_build(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def _args_add_sub_md5(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "-f",
+        "--file",
+        help="Binary file to create md5 hash for.",
+        action="store",
+        dest="binary_file",
+        required=True,
+    )
+
+
 # endregion Args Parse
 
 
@@ -87,7 +105,10 @@ def main() -> int:
         name="build", help=f"Builds the project. Default: clean={BuildArgs.clean}, oxt_src={BuildArgs.oxt_src}"
     )
 
+    md5_subparser = subparser.add_parser(name="md5", help="Generates Md5 Hashes for the project.")
+
     _args_add_sub_build(parser=build_subparser)
+    _args_add_sub_md5(parser=md5_subparser)
 
     # region Read Args
     args = parser.parse_args()

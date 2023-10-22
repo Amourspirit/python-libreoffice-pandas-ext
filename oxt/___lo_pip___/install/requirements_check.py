@@ -28,7 +28,20 @@ class RequirementsCheck(metaclass=Singleton):
         Returns:
             bool: ``True`` if requirements are installed; Otherwise, ``False``.
         """
-        return all(self._is_valid_version(name=name, ver=ver) == 0 for name, ver in self._config.requirements.items())
+        result = all(
+            self._is_valid_version(name=name, ver=ver) == 0 for name, ver in self._config.requirements.items()
+        )
+        if self._config.is_win:
+            if not result:
+                return result
+            try:
+                import _bz2
+
+                result = True
+            except ImportError:
+                self._logger.info("_bz2 is not installed.")
+                result = False
+        return result
 
     def _get_package_version(self, package_name: str) -> str:
         """
