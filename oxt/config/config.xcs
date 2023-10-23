@@ -124,5 +124,28 @@
                 </info>
             </prop>
         </group>
+        <group oor:name="Options">
+            <prop oor:name="OptionLoadPandas" oor:type="xs:boolean">
+                <info>
+                    <desc>
+                        Determins if Pandas is loaded when LibreOffice is started.
+                    </desc>
+                </info>
+            </prop>
+            <prop oor:name="OptionLoadNumpy" oor:type="xs:boolean">
+                <info>
+                    <desc>
+                        Determins if Numpy is loaded when LibreOffice is started.
+                    </desc>
+                </info>
+            </prop>
+            <prop oor:name="OptionLoadOooDev" oor:type="xs:boolean">
+                <info>
+                    <desc>
+                        Determins if OooDev is loaded when LibreOffice is started.
+                    </desc>
+                </info>
+            </prop>
+        </group>
     </component>
 </oor:component-schema>

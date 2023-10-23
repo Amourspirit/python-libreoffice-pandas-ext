@@ -16,6 +16,26 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <value>false</value>
         </prop>
         <node oor:name="Leaves">
+            <node oor:name="___lo_identifier___.options" oor:op="fuse">
+                <prop oor:name="Id">
+                    <value>___lo_identifier___</value>
+                </prop>
+                <prop oor:name="Label">
+                    <value xml:lang="en-US">Options</value>
+                </prop>
+                <prop oor:name="OptionsPage">
+                    <value>%origin%/../dialogs/options.xdl</value>
+                </prop>
+                <prop oor:name="EventHandlerService">
+                    <value>___lo_implementation_name___.OptionsPage</value>
+                </prop>
+                <prop oor:name="GroupId">
+                    <value></value>
+                </prop>
+                <prop oor:name="GroupIndex">
+                    <value>0</value>
+                </prop>
+            </node>
             <node oor:name="___lo_identifier___.logging" oor:op="fuse">
                 <prop oor:name="Id">
                     <value>___lo_identifier___</value>
@@ -33,29 +53,9 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                     <value></value>
                 </prop>
                 <prop oor:name="GroupIndex">
-                    <value>0</value>
+                    <value>1</value>
                 </prop>
             </node>
-            <!-- <node oor:name="___lo_identifier___.ex" oor:op="fuse">
-                <prop oor:name="Id">
-                    <value>___lo_identifier___</value>
-                </prop>
-                <prop oor:name="Label">
-                    <value xml:lang="en-US">Example</value>
-                </prop>
-                <prop oor:name="OptionsPage">
-                    <value>%origin%/../dialogs/example.xdl</value>
-                </prop>
-                <prop oor:name="EventHandlerService">
-                    <value>___lo_implementation_name___.Example</value>
-                </prop>
-                <prop oor:name="GroupId">
-                    <value></value>
-                </prop>
-                <prop oor:name="GroupIndex">
-                    <value>0</value>
-                </prop>
-            </node> -->
         </node>
     </node>
 </node>

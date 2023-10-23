@@ -68,4 +68,15 @@
       <value>___delay_startup___</value>
     </prop>
   </node>
+  <node oor:name="Options">
+    <prop oor:name="OptionLoadPandas" oor:type="xs:boolean">
+      <value>false</value>
+    </prop>
+    <prop oor:name="OptionLoadNumpy" oor:type="xs:boolean">
+      <value>false</value>
+    </prop>
+    <prop oor:name="OptionLoadOooDev" oor:type="xs:boolean">
+      <value>false</value>
+    </prop>
+  </node>
 </oor:component-data>

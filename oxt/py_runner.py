@@ -161,6 +161,7 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
 
             if requirements_met:
                 self._logger.debug("Requirements are met. Nothing more to do.")
+                self._import_on_load()
                 self._log_ex_time(self._start_time)
                 return
 
@@ -253,6 +254,8 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
 
             if has_window:
                 self._display_complete_dialog()
+
+            self._import_on_load()
 
             self._logger.info(f"{self._config.lo_implementation_name} execute Done!")
         except Exception as err:
@@ -588,6 +591,37 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
 
     # endregion handel windows _bz2
 
+    # region Import on Load
+    def _import_on_load(self) -> None:
+        try:
+            from ___lo_pip___.settings.load_settings import LoadSettings
+
+            self._logger.debug("Starting _import_on_load")
+
+            settings = LoadSettings()
+            if settings.load_numpy:
+                with contextlib.suppress(ImportError):
+                    import numpy # type: ignore
+
+                    self._logger.debug("Imported numpy")
+
+            if settings.load_pandas:
+                with contextlib.suppress(ImportError):
+                    import pandas # type: ignore
+
+                    self._logger.debug("Imported pandas")
+
+            if settings.load_ooo_dev:
+                with contextlib.suppress(ImportError):
+                    import ooodev # type: ignore
+
+                    self._logger.debug("Imported ooodev")
+        except Exception as err:
+            self._logger.error(err, exc_info=True)
+        self._logger.debug("Finished _import_on_load")
+
+    # endregion Import on Load
+
     # region Debug
 
     def _show_extra_debug_info(self):
@@ -652,10 +686,10 @@ g_ImplementationHelper.addImplementation(
 )
 
 # uncomment here and int options.xcu to use the example dialog
-# from ___lo_pip___.dialog.handler import example
+from ___lo_pip___.dialog.handler import options
 
-# g_ImplementationHelper.addImplementation(
-#     example.OptionsDialogHandler, example.IMPLEMENTATION_NAME, (example.IMPLEMENTATION_NAME,)
-# )
+g_ImplementationHelper.addImplementation(
+    options.OptionsDialogHandler, options.IMPLEMENTATION_NAME, (options.IMPLEMENTATION_NAME,)
+)
 
 # endregion Implementation
