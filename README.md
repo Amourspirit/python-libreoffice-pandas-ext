@@ -1,64 +1,71 @@
-# Python LibreOffice Pip Extension Template
+# Python Pandas Extension for LibreOffice
 
-## Introduction
+[Pandas](https://pandas.pydata.org/) is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.
 
-This project is intended to be a template for developers of LibreOffice Extensions.
+## Example
 
-Need to create a quick cross platform extension that installs python packages requirements? If so you found the correct template.
+The following example shows how to use Pandas to create a data frame and then use the data frame to populate a Calc spreadsheet.
+The source code can be found in the [macro](./macro) folder.
 
-If you only need to create an extension that installs one or more Python Packages into LibreOffice the no code experience is needed. Simply make a repo from the current template, change configuration, build and your done. A new LibreOffice extension has been generated that will install your python packages when it is installed into LibreOffice. See the [Quick Start](https://github.com/Amourspirit/python-libreoffice-pip/wiki/Quick-Start) in the Wiki.
+```python
+import pandas as pd
 
-This project is also well suited for developers who want to create a LibreOffice Extension using Python and need to Pip install one or more requirements.
+from ooodev.dialog.msgbox import MsgBox, MessageBoxType
+from ooodev.macro.macro_loader import MacroLoader
+from ooodev.office.calc import Calc
+from ooodev.utils.info import Info
+from ooodev.utils.lo import Lo
 
-All the tools needed to develop, debug, and test are included in this template.
-A developer can use this template to create a LibreOffice Extension that uses Python and Pip install.
 
-The extensions created with this template can be installed cross platform.
+def _do_work() -> None:
+    # make sure we are working on a Calc Spreadsheet
+    doc = Lo.XSCRIPTCONTEXT.getDocument()
+    if not Info.is_doc_type(doc_type=Lo.Service.CALC, obj=doc):
+        MsgBox.msgbox(msg="Not a Calc document", title="Error", boxtype=MessageBoxType.ERRORBOX)
+        return
 
-Tested on the following:
+    # create a data frame and add some data to it.
+    df = pd.DataFrame()
+    df["Name"] = ["Anil", "Raju", "Arun"]
+    df["Age"] = ["32", "34", "45"]
 
-- Windows
-- Windows LibreOffice Portable
-- Mac
-- Linux sudo installed LibreOffice
-- Linux Snap installed LibreOffice
-- Linux Flatpak installed LibreOffice
-- Linux AppImage LibreOffice
+    data = (("Name", "Age"),)  # Column names
+    # convert data frame values into something that Calc can use.
+    data += tuple(df.itertuples(index=False, name=None))
 
-For more information see the [Wiki](https://github.com/Amourspirit/python-libreoffice-pip/wiki)
+    sheet = Calc.get_active_sheet()
+    # set the data starting at cell A1
+    Calc.set_array(values=data, sheet=sheet, name="A1")
 
-For a working example see the following extensions:
 
-- [OOO Development Tools Extension](https://github.com/Amourspirit/libreoffice_ooodev_ext#readme)
-- [OooDev GUI Automation for Windows](https://github.com/Amourspirit/ooodev-gui-win-ext#readme)
+def demo(*args) -> None:
+    with MacroLoader():
+        # using MacroLoader so we can use OooDev in macros
+        _do_work()
 
-<details>
-<summary>Original Template Readme</summary>
 
-# Live LibreOffice Python
+g_exportedScripts = (demo,)
+```
 
-Live LibreOffice Python is a complete development environment for creating, debugging and testing python scripts. It leverages the power of [VS Code] and has [LibreOffice] baked in that can be access via the internal web browser or via your local web browser which allows for a much more pleasant and consistent debugging experience.
+## Dev Container
 
-With the power of [GitHub Codespaces](https://docs.github.com/en/codespaces/overview) it is possible to have [VS Code] and [LibreOffice] running together. One big benefit is a isolated and [VS Code]/[LibreOffice] environment.
+This project is generated from [Python LibreOffice Pip Extension Template](https://github.com/Amourspirit/python-libreoffice-pip) which in turn was generated from the [Live LibreOffice Python Template] This means this project can be run/developed in a Development container or Codespace with full access to LibreOffice.
 
-Locally a project based upon this template can also be run in a [Development Container](https://code.visualstudio.com/remote/advancedcontainers/overview).
+### Accessing LibreOffice
 
-It is also possible to use [GitHub CLI/CD] to create a workflow that test your project with the presents of LibreOffice. This template has a working example of testing using [GitHub CLI/CD].
+The ports to access LibreOffice are `3032` for http and `3033` for https.
 
-There are Built in [Tools](https://github.com/Amourspirit/live-libreoffice-python/wiki/Tools) such as [gitget](https://github.com/Amourspirit/live-libreoffice-python/wiki/Tools#gitget) that allow you to quickly add examples to your project from sources such as [LibreOffice Python UNO Examples]. Also there is a built in [console](https://github.com/Amourspirit/live-libreoffice-python/wiki/Console) to help debug the [API](https://api.libreoffice.org/).
+See also: [How do I access the LibreOffice in a GitHub Codespace?](https://github.com/Amourspirit/live-libreoffice-python/wiki/FAQ#how-do-i-access-the-libreoffice-in-a-github-codespace) on [Live LibreOffice Python Template].
 
-This templated can also be leveraged to demonstrate working examples of code.
+## Running Macro
 
-[![image](https://github.com/Amourspirit/live-libreoffice-python/assets/4193389/35758c26-63b7-48f9-99c0-84dd19b26a8f)](https://github.com/Amourspirit/live-libreoffice-python/assets/4193389/35758c26-63b7-48f9-99c0-84dd19b26a8f)
+The example macro is already installed in LibreOffice when the container is started and be found in the [macro](./macro) folder.
+However, the extension must be installed before running the example macro. From LibreOffice open the extension manager, `Tools -> Extension Manager ...` and add `pandas.oxt`
 
-## Getting Started
+When prompted choose `Only for me`. Restart LibreOffice and Pandas will install.
 
-See the [Getting Started](https://github.com/Amourspirit/live-libreoffice-python/wiki/Getting-Started) in the [Wiki](https://github.com/Amourspirit/live-libreoffice-python/wiki).
+![Add Extension Dialog](https://github.com/Amourspirit/python-libreoffice-pandas-ext/assets/4193389/d62d9a5b-299d-48bd-bc41-0d0ff6718364)
 
-[VS Code]:https://code.visualstudio.com/
+![For whom do you want to install the extension dialog box](https://github.com/Amourspirit/python-libreoffice-numpy-ext/assets/4193389/ee0369a2-f2f9-45d9-b093-66a138078f2a)
 
-[LibreOffice]:https://www.libreoffice.org/
-[GitHub CLI/CD]:https://resources.github.com/ci-cd/
-[LibreOffice Python UNO Examples]:https://github.com/Amourspirit/python-ooouno-ex
-
-</details>
+[Live LibreOffice Python Template]:https://github.com/Amourspirit/live-libreoffice-python
