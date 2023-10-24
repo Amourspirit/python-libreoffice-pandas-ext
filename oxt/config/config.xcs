@@ -147,5 +147,27 @@
                 </info>
             </prop>
         </group>
+        <group oor:name="Install">
+            <prop oor:name="InstallOdfpy" oor:type="xs:boolean">
+                <info>
+                    <desc>
+                        Determins if odfpy python package is to be installed.
+                        Default is true.
+                        This setting is available to allow the user to disable the installation of odfpy
+                        in the event that it failing install and continuing to try to install on every startup.
+                    </desc>
+                </info>
+            </prop>
+            <prop oor:name="InstallOooDev" oor:type="xs:boolean">
+                <info>
+                    <desc>
+                        Determins if ooodev python package is to be installed.
+                        Default is true.
+                        This setting is available to allow the user to disable the installation of
+                        odfpy
+                    </desc>
+                </info>
+            </prop>
+        </group>
     </component>
 </oor:component-schema>

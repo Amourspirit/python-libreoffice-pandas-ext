@@ -601,19 +601,19 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
             settings = LoadSettings()
             if settings.load_numpy:
                 with contextlib.suppress(ImportError):
-                    import numpy # type: ignore
+                    import numpy  # type: ignore
 
                     self._logger.debug("Imported numpy")
 
             if settings.load_pandas:
                 with contextlib.suppress(ImportError):
-                    import pandas # type: ignore
+                    import pandas  # type: ignore
 
                     self._logger.debug("Imported pandas")
 
             if settings.load_ooo_dev:
                 with contextlib.suppress(ImportError):
-                    import ooodev # type: ignore
+                    import ooodev  # type: ignore
 
                     self._logger.debug("Imported ooodev")
         except Exception as err:
@@ -681,15 +681,26 @@ g_ImplementationHelper = unohelper.ImplementationHelper()
 # which the loader uses to register/instantiate the component.
 g_ImplementationHelper.addImplementation(___lo_implementation_name___, implementation_name, implementation_services)
 
+# from ___lo_pip___.dialog.handler import options
+
+# g_ImplementationHelper.addImplementation(
+#     options.OptionsDialogHandler, options.IMPLEMENTATION_NAME, (options.IMPLEMENTATION_NAME,)
+# )
+
 g_ImplementationHelper.addImplementation(
     logger_options.OptionsDialogHandler, logger_options.IMPLEMENTATION_NAME, (logger_options.IMPLEMENTATION_NAME,)
 )
 
 # uncomment here and int options.xcu to use the example dialog
-from ___lo_pip___.dialog.handler import options
+from ___lo_pip___.dialog.handler import options as dialog_options
+
+# from ___lo_pip___.dialog.handler import install as dialog_install
 
 g_ImplementationHelper.addImplementation(
-    options.OptionsDialogHandler, options.IMPLEMENTATION_NAME, (options.IMPLEMENTATION_NAME,)
+    dialog_options.OptionsDialogHandler, dialog_options.IMPLEMENTATION_NAME, (dialog_options.IMPLEMENTATION_NAME,)
 )
+# g_ImplementationHelper.addImplementation(
+#     dialog_install.OptionsDialogHandler, dialog_install.IMPLEMENTATION_NAME, (dialog_install.IMPLEMENTATION_NAME,)
+# )
 
 # endregion Implementation
