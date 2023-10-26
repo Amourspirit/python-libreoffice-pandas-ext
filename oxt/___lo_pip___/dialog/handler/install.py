@@ -113,13 +113,12 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
             if ev_name == "initialize":
                 listener = CheckBoxListener(self)
                 for control in window.Controls:  # type: ignore
+                    model = control.Model
+                    model.Label = self._resource_resolver.resolve_string(model.Label)
                     if control.supportsService("com.sun.star.awt.UnoControlCheckBox"):
-                        model = cast("UnoControlCheckBoxModel", control.Model)
                         if model.Name == "chkOdfpy":
-                            model.Label = self._resource_resolver.resolve_string("msg10")
                             model.State = self.bool_to_state(self.install_odfpy)
-                        if model.Name == "chkOdfpy":
-                            model.Label = self._resource_resolver.resolve_string("msg10")
+                        elif model.Name == "chkOooDev":
                             model.State = self.bool_to_state(self.install_ooo_dev)
 
                         model.addPropertyChangeListener("State", listener)

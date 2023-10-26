@@ -115,21 +115,31 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                 self.load_ooo_dev = bool(settings["OptionLoadOooDev"])
 
             controls = {
-                "chkPandas": {"name": "Pandas", "setting": "OptionLoadPandas"},
-                "chkNumpy": {"name": "Numpy", "setting": "OptionLoadNumpy"},
-                "chkOooDev": {"name": "OooDev", "setting": "OptionLoadOooDev"},
+                "chkPandas":"OptionLoadPandas",
+                "chkNumpy": "OptionLoadNumpy",
+                "chkOooDev": "OptionLoadOooDev",
             }
+            # if ev_name == "initialize":
+            #     listener = CheckBoxListener(self)
+            #     load_msg = self._resource_resolver.resolve_string("msg09")
+            #     for control in window.Controls:  # type: ignore
+            #         if control.supportsService("com.sun.star.awt.UnoControlCheckBox"):
+            #             model = cast("UnoControlCheckBoxModel", control.Model)
+            #             ctl_value = controls.get(model.Name, None)
+            #             if ctl_value:
+            #                 model.Label = load_msg.format(ctl_value["name"])
+            #                 model.State = self.bool_to_state(settings.get(ctl_value["setting"], False))
+            #                 model.addPropertyChangeListener("State", listener)
+            
             if ev_name == "initialize":
                 listener = CheckBoxListener(self)
-                load_msg = self._resource_resolver.resolve_string("msg09")
                 for control in window.Controls:  # type: ignore
-                    if control.supportsService("com.sun.star.awt.UnoControlCheckBox"):
-                        model = cast("UnoControlCheckBoxModel", control.Model)
-                        ctl_value = controls.get(model.Name, None)
-                        if ctl_value:
-                            model.Label = load_msg.format(ctl_value["name"])
-                            model.State = self.bool_to_state(settings.get(ctl_value["setting"], False))
-                            model.addPropertyChangeListener("State", listener)
+                    model = control.Model
+                    model.Label = self._resource_resolver.resolve_string(model.Label)
+                    ctl_value = controls.get(model.Name)
+                    if ctl_value and control.supportsService("com.sun.star.awt.UnoControlCheckBox"):
+                        model.State = self.bool_to_state(settings.get(ctl_value, False))
+                        model.addPropertyChangeListener("State", listener)
 
         except Exception as err:
             self._logger.error(f"OptionPage-OptionsDialogHandler._load_data: {err}", exc_info=True)

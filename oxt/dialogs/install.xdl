@@ -8,9 +8,11 @@
         <dlg:style dlg:style-id="0" dlg:font-height="9" dlg:font-name="DejaVu Sans Mono" />
     </dlg:styles>
     <dlg:bulletinboard>
-        <dlg:checkbox dlg:id="chkOdfpy" dlg:tab-index="1" dlg:left="7" dlg:top="20"
-            dlg:width="213" dlg:height="8" dlg:value="msg10" dlg:checked="false" />
-        <dlg:checkbox dlg:id="chkOooDev" dlg:tab-index="1" dlg:left="7" dlg:top="32"
-            dlg:width="213" dlg:height="8" dlg:value="msg11" dlg:checked="false" />
+        <dlg:text dlg:id="lblTroubleShoot" dlg:tab-index="1" dlg:left="5" dlg:top="6"
+            dlg:width="213" dlg:height="12" dlg:value="ins01" />
+        <dlg:checkbox dlg:id="chkOdfpy" dlg:tab-index="1" dlg:left="17" dlg:top="24"
+            dlg:width="189" dlg:height="8" dlg:value="ins03" dlg:checked="false" />
+        <dlg:checkbox dlg:id="chkOooDev" dlg:tab-index="1" dlg:left="17" dlg:top="36"
+            dlg:width="189" dlg:height="8" dlg:value="ins02" dlg:checked="false" />
     </dlg:bulletinboard>
 </dlg:window>

@@ -10,12 +10,12 @@ from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 from ...config import Config
-from ...ver.rules.ver_rules import VerRules, VerProto
+from ...lo_util.resource_resolver import ResourceResolver
+from ...lo_util.target_path import TargetPath
 from ...oxt_logger import OxtLogger
+from ...ver.rules.ver_rules import VerRules, VerProto
 from ..download import Download
 from ..progress import Progress
-from ...lo_util.resource_resolver import ResourceResolver
-from ...bz2_config import BZ2Config
 
 
 # https://docs.python.org/3.8/library/importlib.metadata.html#module-importlib.metadata
@@ -54,6 +54,7 @@ class InstallPkg:
         self._flag_upgrade = flag_upgrade
         self._show_progress = bool(kwargs.get("show_progress", self._config.show_progress))
         self._resource_resolver = ResourceResolver(ctx=self.ctx)
+        self._target_path = TargetPath()
 
     def _get_logger(self) -> OxtLogger:
         return OxtLogger(log_name=__name__)
@@ -116,7 +117,7 @@ class InstallPkg:
             auto_target = True
 
         if auto_target:
-            cmd.append(f"--target={self._get_package_target(pkg)}")
+            cmd.append(f"--target={self._target_path.get_package_target(pkg)}")
         elif self.config.is_user_installed:
             cmd.append("--user")
 
@@ -165,16 +166,6 @@ class InstallPkg:
             progress.kill()
 
         return result
-
-    def _get_package_target(self, pkg_name: str) -> str:
-        if not self._config.is_win:
-            return self.config.site_packages
-        if self.config.is_shared_installed or self.config.is_bundled_installed:
-            return self.config.site_packages
-        if pkg_name in self.config.isolate_windows:
-            cfg = BZ2Config()
-            return str(cfg.install_dir)
-        return self.config.site_packages
 
     def _get_env(self) -> Dict[str, str]:
         """

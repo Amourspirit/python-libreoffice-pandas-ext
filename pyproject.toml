@@ -16,6 +16,7 @@ dialog_desktop_owned = false # determines if the dialog is owned by the desktop 
 resource_dir_name = "resources"
 resource_properties_prefix = "pipstrings"
 default_locale = ["en", "US"]
+sym_link_cpython = true
 
 [tool.oxt.token]
 # in the form of "token_name": "token_value"

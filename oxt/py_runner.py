@@ -45,6 +45,7 @@ from ___lo_pip___.events.lo_events import LoEvents
 from ___lo_pip___.events.args.event_args import EventArgs
 from ___lo_pip___.events.startup.startup_monitor import StartupMonitor
 from ___lo_pip___.events.named_events.startup_events import StartupNamedEvent
+from ___lo_pip___.settings.install_settings import InstallSettings
 
 # endregion imports
 
@@ -155,6 +156,12 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
                 self._show_extra_debug_info()
                 # self._config.extension_info.log_extensions(self._logger)
 
+            # Update the config with the install settings
+            # If ooo-dev-tools or odfpy is set to not install by a user, then remove it from the config.
+            # This must be done before Requirements Check.
+            install_settings = InstallSettings()
+            install_settings.update_config()
+
             requirements_met = False
             if self._requirements_check.check_requirements() is True and not self._config.has_locals:
                 requirements_met = True
@@ -251,6 +258,8 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
             pkg_installer.install()
 
             self._handel_bz2()
+
+            self._post_install()
 
             if has_window:
                 self._display_complete_dialog()
@@ -576,20 +585,47 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
         result = self._session.register_path(pth, True)
         self._log_sys_path_register_result(pth, result)
 
+    # endregion handel windows _bz2
+
+    # region Post Install
+    def _post_install(self) -> None:
+        self._logger.debug("Post Install starting")
+        if not self._config.sym_link_cpython:
+            self._logger.debug(
+                "Not creating CPython link because configuration has it turned off. Skipping post install."
+            )
+            return
+        if not self._config.is_mac and not self._config._is_app_image:
+            self._logger.debug("Not Mac or AppImage. Skipping post install.")
+            return
+        try:
+            from ___lo_pip___.install.post.cpython_link import CPythonLink
+
+            link = CPythonLink()
+            link.link()
+        except Exception as err:
+            self._logger.error(err, exc_info=True)
+            return
+        self._logger.debug("Post Install Done")
+
+    # endregion Post Install
+
+    # region Isolate
     def _init_isolated(self) -> None:
         if not self._config.is_win:
+            self._logger.debug("Not Windows, not isolating")
             return
 
-        from ___lo_pip___.bz2_config import BZ2Config
+        from ___lo_pip___.lo_util.target_path import TargetPath
 
-        cfg = BZ2Config()
-        pth = cfg.install_dir
-        if not pth.exists():
-            pth.mkdir(parents=True, exist_ok=True)
-        result = self._session.register_path(pth, True)
-        self._log_sys_path_register_result(pth, result)
+        target_path = TargetPath()
+        if target_path.has_other_target is False:
+            self._logger.debug("No other target, not isolating")
+            return
+        result = self._session.register_path(target_path.target, True)
+        self._log_sys_path_register_result(target_path.target, result)
 
-    # endregion handel windows _bz2
+    # endregion Isolate
 
     # region Import on Load
     def _import_on_load(self) -> None:
@@ -693,14 +729,13 @@ g_ImplementationHelper.addImplementation(
 
 # uncomment here and int options.xcu to use the example dialog
 from ___lo_pip___.dialog.handler import options as dialog_options
-
-# from ___lo_pip___.dialog.handler import install as dialog_install
+from ___lo_pip___.dialog.handler import install as dialog_install
 
 g_ImplementationHelper.addImplementation(
     dialog_options.OptionsDialogHandler, dialog_options.IMPLEMENTATION_NAME, (dialog_options.IMPLEMENTATION_NAME,)
 )
-# g_ImplementationHelper.addImplementation(
-#     dialog_install.OptionsDialogHandler, dialog_install.IMPLEMENTATION_NAME, (dialog_install.IMPLEMENTATION_NAME,)
-# )
+g_ImplementationHelper.addImplementation(
+    dialog_install.OptionsDialogHandler, dialog_install.IMPLEMENTATION_NAME, (dialog_install.IMPLEMENTATION_NAME,)
+)
 
 # endregion Implementation
