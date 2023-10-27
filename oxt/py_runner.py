@@ -127,6 +127,7 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
             except Exception as err:
                 self._logger.error(err, exc_info=True)
         self._requirements_check = RequirementsCheck()
+        self._add_site_package_dir_to_sys_path()
         self._init_isolated()
 
     # endregion Init
@@ -150,7 +151,6 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
             self._add_py_pkgs_to_sys_path()
             self._add_py_req_pkgs_to_sys_path()
             self._add_pure_pkgs_to_sys_path()
-            self._add_site_package_dir_to_sys_path()
 
             if self._config.log_level < 20:  # Less than INFO
                 self._show_extra_debug_info()
@@ -619,11 +619,11 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
         from ___lo_pip___.lo_util.target_path import TargetPath
 
         target_path = TargetPath()
-        if target_path.has_other_target is False:
-            self._logger.debug("No other target, not isolating")
-            return
-        result = self._session.register_path(target_path.target, True)
-        self._log_sys_path_register_result(target_path.target, result)
+        if target_path.has_other_target:
+            target_path.ensure_exist()
+        if target_path.exist():
+            result = self._session.register_path(target_path.target, True)
+            self._log_sys_path_register_result(target_path.target, result)
 
     # endregion Isolate
 

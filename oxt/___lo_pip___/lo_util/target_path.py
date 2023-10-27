@@ -29,9 +29,17 @@ class TargetPath(metaclass=Singleton):
         install_dir = Path(site.USER_BASE) if site.USER_BASE else Path(str(os.getenv("APPDATA"))) / "Roaming/Python"
         bits = "32" if is_32_bit else "64"
         target = install_dir / f"Python{self._config.python_major_minor.replace('.', '')}/{bits}/site-packages"
+        return str(target)
+
+    def ensure_exist(self) -> None:
+        """Ensures the target path exists."""
+        target = Path(self._target)
         if not target.exists():
             target.mkdir(parents=True, exist_ok=True)
-        return str(target)
+
+    def exist(self) -> bool:
+        """Gets if the target path exists."""
+        return Path(self._target).exists()
 
     def get_package_target(self, pkg_name: str) -> str:
         """

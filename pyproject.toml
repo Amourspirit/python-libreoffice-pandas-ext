@@ -36,7 +36,7 @@ url_pip = 'https://bootstrap.pypa.io/get-pip.py'
 # set log_file to "" to disable logging
 log_file = "pandas_install.log"
 log_name = "Pandas Installer"
-log_level = "DEBUG" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
+log_level = "INFO" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
 log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 log_add_console = false # should be false for production
 lo_pip = "lo_pandas"
@@ -51,7 +51,7 @@ odfpy = ">=1.4"
 ooo-dev-tools = ">=0.12.2"
 
 [tool.oxt.isolate]
-windows = ["pandas", "odfpy"]
+windows = ["pandas"]
 
 [tool.oxt.preinstall.pure]
 # verr = ">=1.1.2"
