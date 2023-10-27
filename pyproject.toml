@@ -16,6 +16,7 @@ dialog_desktop_owned = false # determines if the dialog is owned by the desktop 
 resource_dir_name = "resources"
 resource_properties_prefix = "pipstrings"
 default_locale = ["en", "US"]
+sym_link_cpython = true
 
 [tool.oxt.token]
 # in the form of "token_name": "token_value"
@@ -23,7 +24,7 @@ default_locale = ["en", "US"]
 pip_wheel_url = "https://files.pythonhosted.org/packages/50/c2/e06851e8cc28dcad7c155f4753da8833ac06a5c704c109313b8d5a62968a/pip-23.2.1-py3-none-any.whl"
 test_internet_url = "https://duckduckgo.com"
 log_pip_installs = false
-lo_identifier = "org.openoffice.extensions.pandas"
+lo_identifier = "com.github.amourspirit.extensions.pandas"
 lo_implementation_name = "PandasRunner"
 display_name = "Pandas for LibreOffice"
 description = "Pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool."
@@ -50,7 +51,7 @@ odfpy = ">=1.4"
 ooo-dev-tools = ">=0.12.2"
 
 [tool.oxt.isolate]
-windows = ["pandas", "odfpy"]
+windows = ["pandas"]
 
 [tool.oxt.preinstall.pure]
 # verr = ">=1.1.2"

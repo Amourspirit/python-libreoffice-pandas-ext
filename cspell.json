@@ -22,6 +22,8 @@
         "mkdirp",
         "msgbox",
         "nodepath",
+        "odfpy",
+        "ooodev",
         "ooopip",
         "osascript",
         "pipstrings",
