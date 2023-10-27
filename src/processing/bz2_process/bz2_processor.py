@@ -15,7 +15,7 @@ class B2ZConfigT(TypedDict):
     md5: str
 
 
-class BZ2Processer(metaclass=Singleton):
+class BZ2Processor(metaclass=Singleton):
     def __init__(self) -> None:
         toml_path = file_util.find_file_in_parent_dirs("pyproject.toml")
         self._toml_dict = toml.load(toml_path)
