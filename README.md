@@ -15,6 +15,7 @@ The following example shows how to use Pandas to create a data frame and then us
 The source code can be found in the [macro](./macro) folder.
 
 ```python
+# using OooDev to for easy access to LibreOffice
 import pandas as pd
 
 from ooodev.dialog.msgbox import MsgBox, MessageBoxType
@@ -28,7 +29,11 @@ def _do_work() -> None:
     # make sure we are working on a Calc Spreadsheet
     doc = Lo.XSCRIPTCONTEXT.getDocument()
     if not Info.is_doc_type(doc_type=Lo.Service.CALC, obj=doc):
-        MsgBox.msgbox(msg="Not a Calc document", title="Error", boxtype=MessageBoxType.ERRORBOX)
+        MsgBox.msgbox(
+            msg="Not a Calc document",
+            title="Error",
+            boxtype=MessageBoxType.ERRORBOX,
+        )
         return
 
     # create a data frame and add some data to it.
