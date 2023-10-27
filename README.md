@@ -1,3 +1,8 @@
+<p align="center">
+<img src="https://github.com/Amourspirit/python-libreoffice-pandas-ext/assets/4193389/76e3b356-51b1-48d4-a92b-18bdcb46fcf6" alt="Pandas Extension Logo" width="174" height="174">
+</p>
+
+
 # Python Pandas Extension for LibreOffice
 
 [Pandas](https://pandas.pydata.org/) is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.
@@ -45,6 +50,37 @@ def demo(*args) -> None:
 
 
 g_exportedScripts = (demo,)
+```
+
+## Known Issues
+
+### AppImage
+
+Extension does not out of the box for AppImage on Linux. This is due to the AppImage not having the correct libraries installed. The following library us required: `_b2z`.
+
+This is a know bug: [116412](https://bugs.documentfoundation.org/show_bug.cgi?id=116412) and may be fixed in the future. This is also a bug in Windows but this extension solves that issue for Windows.
+
+There is no quick solution for this currently.
+
+On possible fix is to install a version of python that matches your AppImage python version using a tool such as [pyenv](https://github.com/pyenv/pyenv). Then find the `_bz2` library and copy or link it to the AppImage `site-packages`.
+
+For example if your AppImage python version is `3.8.10` then you would install a version of python `3.8` using `pyenv` and then find the `_bz2` library and copy or link it to the AppImage `site-packages`.
+The file would need to be named `_bz2.cpython-3.8.so` in the `site-packages` folder of the AppImage where `3.8` is the major and minor version of the python that AppImage is using.
+
+Here is an example of linking the file:
+
+```bash
+ln -s /home/user/.pyenv/versions/3.8.13/lib/python3.8/lib-dynload/_bz2.cpython-38-x86_64-linux-gnu.so /home/user/.local/lib/python3.8/site-packages/_bz2.cpython-3.8.so
+```
+
+You can use the [APSO](https://extensions.libreoffice.org/en/extensions/show/apso-alternative-script-organizer-for-python) extension to find the python version of the AppImage.
+
+You can test if the library is installed by running the following in the APSO python console:
+
+```python
+>>> import _bz2
+>>> _bz2.__file__
+'/home/user/.local/lib/python3.8/site-packages/_bz2.cpython-3.8.so'
 ```
 
 ## Dev Container
