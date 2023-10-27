@@ -7,6 +7,8 @@
 
 [Pandas](https://pandas.pydata.org/) is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.
 
+This is a LibreOffice extension that allows you to use Pandas in LibreOffice python macros and scripts.
+
 ## Example
 
 The following example shows how to use Pandas to create a data frame and then use the data frame to populate a Calc spreadsheet.
@@ -56,7 +58,7 @@ g_exportedScripts = (demo,)
 
 ### AppImage
 
-Extension does not out of the box for AppImage on Linux. This is due to the AppImage not having the correct libraries installed. The following library us required: `_b2z`.
+Extension does not out of the box for AppImage on Linux. This is due to the AppImage not having the correct libraries installed. The following library is required: `_b2z`.
 
 This is a know bug: [116412](https://bugs.documentfoundation.org/show_bug.cgi?id=116412) and may be fixed in the future. This is also a bug in Windows but this extension solves that issue for Windows.
 
