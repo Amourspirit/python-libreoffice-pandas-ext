@@ -557,8 +557,13 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
 
     def _handel_bz2(self) -> None:
         if not self._get_needs_bz2():
+            import _bz2
+
+            self._logger.debug(f"_bz2 is already installed. Skipping _bz2 install:  {_bz2.__file__}")
             return
         from ___lo_pip___.bz2_config import BZ2Config
+
+        self._logger.debug("Installing _bz2")
 
         cfg = BZ2Config()
         bz_file = cfg.install_dir / "_bz2.pyd"
