@@ -9,6 +9,8 @@
 
 This is a LibreOffice extension that allows you to use Pandas in LibreOffice python macros and scripts.
 
+The extension is on [LibreOffice Extensions](https://extensions.libreoffice.org/en/extensions/show/41998) and found in the [dist](./dist) folder.
+
 ## Example
 
 The following example shows how to use Pandas to create a data frame and then use the data frame to populate a Calc spreadsheet.
