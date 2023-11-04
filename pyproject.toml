@@ -90,7 +90,7 @@ es = "Pandas es una herramienta de análisis y manipulación de datos de código
 
 [tool.poetry]
 name = "lo_pandas_ext"
-version = "1.0.1"
+version = "1.0.2"
 description = "Pandas for LibreOffice"
 authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
 license = "MIT"
