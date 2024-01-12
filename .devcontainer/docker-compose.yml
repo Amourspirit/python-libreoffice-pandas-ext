@@ -9,9 +9,9 @@ services:
       context: ../
       dockerfile: .devcontainer/Dockerfile
       args:
-        LO_VERSION: "7.5.5"
+        LO_VERSION: "7.6.3"
+        POETRY_VERSION: "1.7.1"
         CONFIG_DIR: /config
-        POETRY_VER: "1.7.1"
     # user: root
     container_name: lo_pandas_app
     security_opt:

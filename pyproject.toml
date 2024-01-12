@@ -50,7 +50,7 @@ delay_startup = true # determines if installing waits fo the window to load befo
 [tool.oxt.requirements]
 pandas = ">=2"
 odfpy = ">=1.4"
-ooo-dev-tools = ">=0.15.0"
+ooo-dev-tools = ">=0.20.2"
 
 [tool.oxt.isolate]
 windows = ["pandas"]
@@ -92,7 +92,7 @@ es = "Pandas es una herramienta de análisis y manipulación de datos de código
 
 [tool.poetry]
 name = "lo_pandas_ext"
-version = "1.0.3"
+version = "1.0.4"
 description = "Pandas for LibreOffice"
 authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
 license = "MIT"
