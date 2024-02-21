@@ -1,3 +1,18 @@
+[tool.oxt.requirements]
+pandas = ">=2"
+odfpy = ">=1.4"
+ooo-dev-tools = ">=0.29.0"
+
+[tool.poetry]
+name = "lo_pandas_ext"
+version = "1.0.5"
+description = "Pandas for LibreOffice"
+authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "src" }]
+
+
 # See: https://github.com/Amourspirit/python-libreoffice-pandas-ext/wiki/pyproject.toml
 [tool.oxt.config]
 auto_install_in_site_packages = true
@@ -47,11 +62,6 @@ startup_event = "OnStartApp" # OnStartApp or onFirstVisibleTask
 show_progress = true
 delay_startup = true # determines if installing waits fo the window to load before installing
 
-[tool.oxt.requirements]
-pandas = ">=2"
-odfpy = ">=1.4"
-ooo-dev-tools = ">=0.20.2"
-
 [tool.oxt.isolate]
 windows = ["pandas"]
 
@@ -89,15 +99,6 @@ de = "Pandas ist ein schnelles, leistungsstarkes, flexibles und benutzerfreundli
 pt = "Pandas é uma ferramenta de análise e manipulação de dados de código aberto rápida, poderosa, flexível e fácil de usar."
 es = "Pandas es una herramienta de análisis y manipulación de datos de código abierto rápida, potente, flexible y fácil de usar."
 
-
-[tool.poetry]
-name = "lo_pandas_ext"
-version = "1.0.4"
-description = "Pandas for LibreOffice"
-authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
-license = "MIT"
-readme = "README.md"
-packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.8"
