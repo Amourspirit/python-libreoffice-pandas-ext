@@ -113,4 +113,10 @@ When prompted choose `Only for me`. Restart LibreOffice and Pandas will install.
 
 ![For whom do you want to install the extension dialog box](https://github.com/Amourspirit/python-libreoffice-numpy-ext/assets/4193389/ee0369a2-f2f9-45d9-b093-66a138078f2a)
 
+## Pandas Version
+
+Pandas version can be changed in the extension options.
+
+![image](https://github.com/user-attachments/assets/9469df5b-53b8-4af6-acb9-71791c5dc6db)
+
 [Live LibreOffice Python Template]:https://github.com/Amourspirit/live-libreoffice-python

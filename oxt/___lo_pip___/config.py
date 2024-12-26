@@ -13,6 +13,7 @@ from .oxt_logger.logger_config import LoggerConfig
 from .meta.singleton import Singleton
 from .basic_config import BasicConfig
 from .oxt_logger.oxt_logger import OxtLogger
+from .ver.rules.ver_rules import VerRules
 
 if TYPE_CHECKING:
     from .lo_util import Session
@@ -59,6 +60,8 @@ class Config(metaclass=Singleton):
             self._log_format = logger_config.log_format
             self._basic_config = BasicConfig()
             self._logger.debug("Basic config initialized")
+            self._requirements = self._basic_config.requirements.copy()
+            self._set_requirements(self._requirements)
             generals_settings = GeneralSettings()
             self._logger.debug("General Settings initialized")
             self._url_pip = generals_settings.url_pip
@@ -127,6 +130,28 @@ class Config(metaclass=Singleton):
     # endregion Init
 
     # region Methods
+    def _set_requirements(self, req: Dict[str, str]) -> None:
+        if "pandas" not in req:
+            self._logger.error("Pandas requirement not set in pyproject.toml")
+            return
+        from .settings.options import Options
+
+        options = Options()
+        pandas_ver = options.pandas_requirement
+        ver_rules = VerRules()
+        matched_rules = ver_rules.get_matched_rules(pandas_ver)
+        ver_strings = []
+        for rule in matched_rules:
+            ver_strings.append(rule.get_versions_str())
+
+        if ver_strings:
+            txt_ver = ",".join(ver_strings)
+            self._logger.debug(
+                "Setting from LO options - Pandas requirement: '%s'", txt_ver
+            )
+            req["pandas"] = txt_ver
+        else:
+            self._logger.error("Invalid Pandas requirement: %s", pandas_ver)
 
     def join(self, *paths: str):
         return str(Path(paths[0]).joinpath(*paths[1:]))
@@ -334,7 +359,7 @@ class Config(metaclass=Singleton):
         The key is the name of the package and the value is the version number.
         Example: {"requests": ">=2.25.1"}
         """
-        return self._basic_config.requirements
+        return self._requirements
 
     @property
     def zipped_preinstall_pure(self) -> bool:

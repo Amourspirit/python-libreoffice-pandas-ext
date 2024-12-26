@@ -5,7 +5,7 @@ from ..meta.singleton import Singleton
 from ..lo_util.configuration import Configuration
 
 
-class LoadSettings(metaclass=Singleton):
+class Options(metaclass=Singleton):
     """Singleton Class. Manages Load Settings for the extension."""
 
     def __init__(self) -> None:
@@ -13,9 +13,16 @@ class LoadSettings(metaclass=Singleton):
         self._configuration = Configuration()
         self._node_value = f"/{settings.lo_implementation_name}.Settings/Options"
 
-        self._load_pandas = bool(settings.current_settings.get("OptionLoadPandas", False))
+        self._pandas_requirement = str(
+            settings.current_settings.get("PandasRequirement", "___pandas_req___")
+        )
+        self._load_pandas = bool(
+            settings.current_settings.get("OptionLoadPandas", False)
+        )
         self._load_numpy = bool(settings.current_settings.get("OptionLoadNumpy", False))
-        self._load_ooo_dev = bool(settings.current_settings.get("OptionLoadOooDev", False))
+        self._load_ooo_dev = bool(
+            settings.current_settings.get("OptionLoadOooDev", False)
+        )
 
     # region Properties
     @property
@@ -38,5 +45,12 @@ class LoadSettings(metaclass=Singleton):
         Gets if OOO Dev Tools should be imported when LibreOffice starts.
         """
         return self._load_ooo_dev
+
+    @property
+    def pandas_requirement(self) -> str:
+        """
+        Gets the Pandas Requirement.
+        """
+        return self._pandas_requirement
 
     # endregion Properties
