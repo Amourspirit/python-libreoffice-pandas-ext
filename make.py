@@ -2,6 +2,7 @@
 from __future__ import annotations
 import sys
 import argparse
+import datetime
 from src.build import Build
 from src.build_args import BuildArgs
 from src.security import md5_ops
@@ -35,7 +36,7 @@ def _args_action_build(args: argparse.Namespace) -> None:
     )
     print("Processing...", end="", flush=True)
     builder.build()
-    print("Done!")
+    print(f'Build Finished {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
 
 
 def _args_action_md5(args: argparse.Namespace) -> None:
@@ -53,7 +54,12 @@ def _args_add_sub_build(parser: argparse.ArgumentParser) -> None:
         default=build_args.oxt_src,
     )
     parser.add_argument(
-        "-c", "--no-clean", help="Do not clean build folder", action="store_false", dest="clean", default=True
+        "-c",
+        "--no-clean",
+        help="Do not clean build folder",
+        action="store_false",
+        dest="clean",
+        default=True,
     )
     parser.add_argument(
         "-t",
@@ -72,7 +78,12 @@ def _args_add_sub_build(parser: argparse.ArgumentParser) -> None:
         default=True,
     )
     parser.add_argument(
-        "-d", "--no-dist", help="Do not process dist", action="store_false", dest="make_dist", default=True
+        "-d",
+        "--no-dist",
+        help="Do not process dist",
+        action="store_false",
+        dest="make_dist",
+        default=True,
     )
 
 
@@ -102,10 +113,13 @@ def main() -> int:
     parser = _create_parser("main")
     subparser = parser.add_subparsers(dest="command")
     build_subparser = subparser.add_parser(
-        name="build", help=f"Builds the project. Default: clean={BuildArgs.clean}, oxt_src={BuildArgs.oxt_src}"
+        name="build",
+        help=f"Builds the project. Default: clean={BuildArgs.clean}, oxt_src={BuildArgs.oxt_src}",
     )
 
-    md5_subparser = subparser.add_parser(name="md5", help="Generates Md5 Hashes for the project.")
+    md5_subparser = subparser.add_parser(
+        name="md5", help="Generates Md5 Hashes for the project."
+    )
 
     _args_add_sub_build(parser=build_subparser)
     _args_add_sub_md5(parser=md5_subparser)

@@ -24,7 +24,9 @@ class BasicConfig(metaclass=ConfigMeta):
         self._lo_identifier = str(kwargs["lo_identifier"])
         self._lo_implementation_name = str(kwargs["lo_implementation_name"])
         self._zipped_preinstall_pure = bool(kwargs["zipped_preinstall_pure"])
-        self._auto_install_in_site_packages = bool(kwargs["auto_install_in_site_packages"])
+        self._auto_install_in_site_packages = bool(
+            kwargs["auto_install_in_site_packages"]
+        )
         self._install_wheel = bool(kwargs["install_wheel"])
         self._has_locals = bool(kwargs["has_locals"])
         self._window_timeout = int(kwargs["window_timeout"])
@@ -35,7 +37,13 @@ class BasicConfig(metaclass=ConfigMeta):
         self._isolate_windows = set(kwargs["isolate_windows"])
         self._sym_link_cpython = bool(kwargs["sym_link_cpython"])
         self._uninstall_on_update = bool(kwargs["uninstall_on_update"])
-        self._install_on_no_uninstall_permission = bool(kwargs["install_on_no_uninstall_permission"])
+        self._install_on_no_uninstall_permission = bool(
+            kwargs["install_on_no_uninstall_permission"]
+        )
+        self._pandas_req = str(kwargs["pandas_req"])
+        self._oxt_name = str(kwargs["oxt_name"])
+        self._extension_version = str(kwargs["extension_version"])
+        self._extension_license = str(kwargs["extension_license"])
 
         if "requirements" not in kwargs:
             kwargs["requirements"] = {}
@@ -79,6 +87,24 @@ class BasicConfig(metaclass=ConfigMeta):
         If this is set to ``True`` then the dialog is owned by the LibreOffice desktop window.
         """
         return self._dialog_desktop_owned
+
+    @property
+    def extension_license(self) -> str:
+        """
+        Gets extension license.
+
+        The value for this property can be set in pyproject.toml (tool.poetry.license)
+        """
+        return self._extension_license
+
+    @property
+    def extension_version(self) -> str:
+        """
+        Gets extension version.
+
+        The value for this property can be set in pyproject.toml (tool.poetry.version)
+        """
+        return self._extension_version
 
     @property
     def has_locals(self) -> bool:
@@ -129,6 +155,24 @@ class BasicConfig(metaclass=ConfigMeta):
         The value for this property can be set in pyproject.toml (tool.oxt.token.lo_implementation_name)
         """
         return self._lo_implementation_name
+
+    @property
+    def oxt_name(self) -> str:
+        """
+        Gets the Otx name of the extension without the ``.otx`` extension.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.token.oxt_name)
+        """
+        return self._oxt_name
+
+    @property
+    def pandas_req(self) -> str:
+        """
+        Gets the Pandas Requirement defined in pyproject.toml.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.requirements.pandas)
+        """
+        return self._pandas_req
 
     @property
     def py_pkg_dir(self) -> str:

@@ -71,8 +71,13 @@ class Config(metaclass=Singleton):
 
             self._session = Session()
             self._extension_info = ExtensionInfo()
-            self._auto_install_in_site_packages = self._basic_config.auto_install_in_site_packages
-            if not self._auto_install_in_site_packages and os.getenv("DEV_CONTAINER", "") == "1":
+            self._auto_install_in_site_packages = (
+                self._basic_config.auto_install_in_site_packages
+            )
+            if (
+                not self._auto_install_in_site_packages
+                and os.getenv("DEV_CONTAINER", "") == "1"
+            ):
                 # if running in a dev container (Codespace)
                 self._auto_install_in_site_packages = True
             self._log_level = logger_config.log_level
@@ -87,7 +92,9 @@ class Config(metaclass=Singleton):
             util = Util()
 
             # self._package_location = Path(file_util.get_package_location(self._lo_identifier, True))
-            self._package_location = Path(self._extension_info.get_extension_loc(self.lo_identifier, True)).resolve()
+            self._package_location = Path(
+                self._extension_info.get_extension_loc(self.lo_identifier, True)
+            ).resolve()
             self._python_major_minor = self._get_python_major_minor()
 
             self._is_user_installed = False
@@ -99,7 +106,9 @@ class Config(metaclass=Singleton):
                 self._python_path = Path(self.join(util.config("Module"), "python.exe"))
                 self._site_packages = self._get_windows_site_packages_dir()
             elif self._is_mac:
-                self._python_path = Path(self.join(util.config("Module"), "..", "Resources", "python")).resolve()
+                self._python_path = Path(
+                    self.join(util.config("Module"), "..", "Resources", "python")
+                ).resolve()
                 self._site_packages = self._get_mac_site_packages_dir()
             elif self._is_app_image:
                 self._python_path = Path(self.join(util.config("Module"), "python"))
@@ -153,7 +162,10 @@ class Config(metaclass=Singleton):
             if site.USER_SITE:
                 site_packages = Path(site.USER_SITE).resolve()
             else:
-                site_packages = Path.home() / f".local/lib/python{self.python_major_minor}/site-packages"
+                site_packages = (
+                    Path.home()
+                    / f".local/lib/python{self.python_major_minor}/site-packages"
+                )
             site_packages.mkdir(parents=True, exist_ok=True)
         return str(site_packages)
 
@@ -162,7 +174,9 @@ class Config(metaclass=Singleton):
         sand_box = os.getenv("FLATPAK_SANDBOX_DIR", "") or str(
             Path.home() / ".var/app/org.libreoffice.LibreOffice/sandbox"
         )
-        site_packages = Path(sand_box) / f"lib/python{self.python_major_minor}/site-packages"
+        site_packages = (
+            Path(sand_box) / f"lib/python{self.python_major_minor}/site-packages"
+        )
         site_packages.mkdir(parents=True, exist_ok=True)
         return str(site_packages)
 
@@ -176,7 +190,8 @@ class Config(metaclass=Singleton):
                 site_packages = Path(site.USER_SITE).resolve()
             else:
                 site_packages = (
-                    Path.home() / f"Library/LibreOfficePython/{self.python_major_minor}/lib/python/site-packages"
+                    Path.home()
+                    / f"Library/LibreOfficePython/{self.python_major_minor}/lib/python/site-packages"
                 )
             site_packages.mkdir(parents=True, exist_ok=True)
         return str(site_packages)
@@ -191,7 +206,8 @@ class Config(metaclass=Singleton):
                 site_packages = Path(site.USER_SITE).resolve()
             else:
                 site_packages = (
-                    Path.home() / f"'/AppData/Roaming/Python/Python{self.python_major_minor}/site-packages'"
+                    Path.home()
+                    / f"'/AppData/Roaming/Python/Python{self.python_major_minor}/site-packages'"
                 )
             site_packages.mkdir(parents=True, exist_ok=True)
         return str(site_packages)
@@ -595,6 +611,42 @@ class Config(metaclass=Singleton):
         If this is set to ``True`` then CPython will be symlinked on Linux AppImage and Mac OS.
         """
         return self._basic_config.sym_link_cpython
+
+    @property
+    def extension_license(self) -> str:
+        """
+        Gets extension license.
+
+        The value for this property can be set in pyproject.toml (tool.poetry.license)
+        """
+        return self._basic_config.extension_license
+
+    @property
+    def extension_version(self) -> str:
+        """
+        Gets extension version.
+
+        The value for this property can be set in pyproject.toml (tool.poetry.version)
+        """
+        return self._basic_config.extension_version
+
+    @property
+    def oxt_name(self) -> str:
+        """
+        Gets the Otx name of the extension without the ``.otx`` extension.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.token.oxt_name)
+        """
+        return self._basic_config.oxt_name
+
+    @property
+    def pandas_req(self) -> str:
+        """
+        Gets the Pandas Requirement defined in pyproject.toml.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.requirements.pandas)
+        """
+        return self._basic_config.pandas_req
 
     # endregion Properties
 
