@@ -9,6 +9,7 @@ from .logger_config import LoggerConfig
 
 # https://stackoverflow.com/questions/13521981/implementing-an-optional-logger-in-code
 
+
 class OxtLogger(Logger):
     """Custom Logger Class"""
 
@@ -68,7 +69,7 @@ class OxtLogger(Logger):
         console_handler.setFormatter(self.formatter)
         console_handler.setLevel(self._config.log_level)
         return console_handler
-    
+
     def _get_null_handler(self):
         return logging.NullHandler()
 
@@ -82,7 +83,30 @@ class OxtLogger(Logger):
         file_handler.setLevel(self._config.log_level)
         return file_handler
 
+    # region Properties
     @property
     def log_file(self):
         """Log file path."""
         return self._log_file
+
+    @property
+    def is_debug(self) -> bool:
+        """Check if is debug"""
+        return self.isEnabledFor(logging.DEBUG)
+
+    @property
+    def is_info(self) -> bool:
+        """Check if is info"""
+        return self.isEnabledFor(logging.INFO)
+
+    @property
+    def is_warning(self) -> bool:
+        """Check if is warning"""
+        return self.isEnabledFor(logging.WARNING)
+
+    @property
+    def is_error(self) -> bool:
+        """Check if is error"""
+        return self.isEnabledFor(logging.ERROR)
+
+    # endregion Properties

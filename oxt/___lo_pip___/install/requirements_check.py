@@ -3,6 +3,7 @@ Checks to see if Requirements are met for Pip packages.
 
 No Internet needed.
 """
+
 from __future__ import annotations
 
 from importlib.metadata import PackageNotFoundError, version
@@ -28,20 +29,10 @@ class RequirementsCheck(metaclass=Singleton):
         Returns:
             bool: ``True`` if requirements are installed; Otherwise, ``False``.
         """
-        result = all(
-            self._is_valid_version(name=name, ver=ver) == 0 for name, ver in self._config.requirements.items()
+        return all(
+            self._is_valid_version(name=name, ver=ver) == 0
+            for name, ver in self._config.requirements.items()
         )
-        if self._config.is_win:
-            if not result:
-                return result
-            try:
-                import _bz2
-
-                result = True
-            except ImportError:
-                self._logger.info("_bz2 is not installed.")
-                result = False
-        return result
 
     def _get_package_version(self, package_name: str) -> str:
         """
@@ -71,26 +62,38 @@ class RequirementsCheck(metaclass=Singleton):
         """
         pkg_ver = self._get_package_version(name)
         if not pkg_ver:
-            self._logger.debug(f"Package {name} not installed.")
+            self._logger.debug("Package %s not installed.", name)
             return 2
 
         if not ver:
             # set default version to >=0.0.0
             ver = "==*"
         rules = self._ver_rules.get_matched_rules(ver)
-        self._logger.debug(f"Found Package {name} {pkg_ver} already installed ...")
+        self._logger.debug("Found Package %s %s already installed ...", name, pkg_ver)
         if not rules:
             if pkg_ver:
-                self._logger.info(f"Package {name} {pkg_ver} already installed, no rules")
+                self._logger.info(
+                    "Package %s %s already installed, no rules", name, pkg_ver
+                )
             else:
-                self._logger.error(f"Unable to find rules for {name} {ver}")
+                self._logger.error("Unable to find rules for %s %s", name, ver)
             return -1
 
-        rules_pass = self._ver_rules.get_installed_is_valid_by_rules(rules=rules, check_version=pkg_ver)
-        if rules_pass == False:
+        rules_pass = self._ver_rules.get_installed_is_valid_by_rules(
+            rules=rules, check_version=pkg_ver
+        )
+        if rules_pass is False:
             self._logger.info(
-                f"Package {name} {pkg_ver} already installed. It does not meet requirements specified by: {ver}"
+                "Package %s %s already installed. It does not meet requirements specified by: %s",
+                name,
+                pkg_ver,
+                ver,
             )
             return 1
-        self._logger.info(f"Package {name} {pkg_ver} already installed. Requirements met for constraints: {ver}")
+        self._logger.info(
+            "Package %s %s already installed. Requirements met for constraints: %s",
+            name,
+            pkg_ver,
+            ver,
+        )
         return 0

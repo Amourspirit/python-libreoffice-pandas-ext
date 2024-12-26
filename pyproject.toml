@@ -1,16 +1,35 @@
+[project]
+name = "lo_pandas_ext"
+version = "2.0.0"
+description = "Pandas for LibreOffice"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = ["numpy", "libreoffice","uno", "pyuno"]
+dependencies = [
+    "pandas>=2",
+    "odfpy>=1.4",
+]
+authors = [
+    {name = ":Barry-Thomas-Paul: Moss", email = "pandas.deacon345@passmail.net"}]
+
+
+[dependency-groups]
+dev = [
+    "lxml>=5.3.0",
+    "ooo-dev-tools>=0.50.0",
+    "packaging>=24.2",
+    "pytest-mock>=3.14.0",
+    "pytest>=8.3.4",
+    "ruff>=0.8.1",
+    "toml>=0.10.2",
+    "typing-extensions>=4.12.2",
+    "oooenv>=0.2.4",
+]
+
 [tool.oxt.requirements]
 pandas = ">=2"
 odfpy = ">=1.4"
-ooo-dev-tools = ">=0.29.0"
-
-[tool.poetry]
-name = "lo_pandas_ext"
-version = "1.0.5"
-description = "Pandas for LibreOffice"
-authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
-license = "MIT"
-readme = "README.md"
-packages = [{ include = "src" }]
 
 
 # See: https://github.com/Amourspirit/python-libreoffice-pandas-ext/wiki/pyproject.toml
@@ -23,7 +42,7 @@ oxt_name = "pandas"
 py_pkg_dir = "py_pkgs"
 py_pkg_files = []
 py_pkg_names = [] # ["ooodev", "ooo"]
-token_file_ext = ["txt", "xml", "xcu", "xcs"]
+token_file_ext = ["txt", "xml", "xcu", "xcs", "py"]
 update_file = "update.xml"
 zip_preinstall_pure = true
 window_timeout = 5 # number of seconds to wait for window to appear
@@ -76,14 +95,16 @@ en = { name = "___publisher___", url="___publisher_url___" }
 "3.9" = { url = "https://www.python.org/ftp/python/3.9.13/python-3.9.13-embed-win32.zip", md5="fec0bc06857502a56dd1aeaea6488ef8" }
 "3.10" = { url = "https://www.python.org/ftp/python/3.10.11/python-3.10.11-embed-win32.zip", md5="fee70dae06c25c60cbe825d6a1bfda57" }
 "3.11" = { url = "https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-win32.zip", md5="d035d12d72e2d62b6e5219ea8f3bda39" }
-"3.12" = { url = "https://www.python.org/ftp/python/3.12.0/python-3.12.0rc3-embed-win32.zip", md5="b6ed11598c929af946a110ca4db0d95c" }
+"3.12" = { url = "https://www.python.org/ftp/python/3.12.7/python-3.12.7-embed-win32.zip", md5="21a051ecac4a9a25fab169793ecb6e56" }
+"3.13" = { url = "https://www.python.org/ftp/python/3.13.0/python-3.13.0rc3-embed-win32.zip", md5="02d47e6085ae8921d83fe937ec2c6590" }
 
 [tool.oxt.bz2.64_bit]
 "3.8" = { url = "https://www.python.org/ftp/python/3.8.10/python-3.8.10-embed-amd64.zip", md5="3acb1d7d9bde5a79f840167b166bb633" }
 "3.9" = { url = "https://www.python.org/ftp/python/3.9.13/python-3.9.13-embed-amd64.zip", md5="57731cf80b1c429a0be7133266d7d7cf" }
 "3.10" = { url = "https://www.python.org/ftp/python/3.10.11/python-3.10.11-embed-amd64.zip", md5="f1c0538b060e03cbb697ab3581cb73bc" }
 "3.11" = { url = "https://www.python.org/ftp/python/3.11.6/python-3.11.6-embed-amd64.zip", md5="ff5f34b8d2504c49fc94ffc29998b8a0" }
-"3.12" = { url = "https://www.python.org/ftp/python/3.12.0/python-3.12.0rc3-embed-arm64.zip", md5="728cbbfd0d5fc485233e1aba7884a773" }
+"3.12" = { url = "https://www.python.org/ftp/python/3.12.7/python-3.12.7-embed-amd64.zip", md5="4c0a5a44d4ca1d0bc76fe08ea8b76adc" }
+"3.13" = { url = "https://www.python.org/ftp/python/3.13.0/python-3.13.0rc3-embed-amd64.zip", md5="93d8329cd1c8d09f64c28191942c11ce" }
 
 [tool.oxt.locale.name]
 en = "___display_name___"
@@ -98,27 +119,6 @@ fr = "Pandas est un outil d'analyse et de manipulation de données open source r
 de = "Pandas ist ein schnelles, leistungsstarkes, flexibles und benutzerfreundliches Open-Source-Tool zur Datenanalyse und -manipulation."
 pt = "Pandas é uma ferramenta de análise e manipulação de dados de código aberto rápida, poderosa, flexível e fácil de usar."
 es = "Pandas es una herramienta de análisis y manipulación de datos de código abierto rápida, potente, flexible y fácil de usar."
-
-
-[tool.poetry.dependencies]
-python = "^3.8"
-ooouno = "^2.1.2"
-toml = "^0.10.2"
-
-
-[tool.poetry.group.dev.dependencies]
-types-scriptforge = ">=2.0.1"
-pytest = "^7.4.0"
-pytest-dotenv = "^0.5.2"
-black = "^23.7.0"
-oooscript = "^1.1.3"
-oooenv = "^0.2.2"
-lxml = "^4.9.3"
-ooo-dev-tools = ">=0.12.2"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
 
 
 [tool.pylint.'MESSAGES CONTROL']
@@ -144,4 +144,13 @@ testpaths = ["tests"]
 markers = [
     "skip_headless: skips a test in headless mode",
     "skip_not_headless_os: skips a test in GUI mode for give os",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = [
+    "build/**/*",
 ]

@@ -12,7 +12,7 @@
             dlg:width="213" dlg:height="12" dlg:value="ins01" />
         <dlg:checkbox dlg:id="chkOdfpy" dlg:tab-index="1" dlg:left="17" dlg:top="24"
             dlg:width="189" dlg:height="8" dlg:value="ins03" dlg:checked="false" />
-        <dlg:checkbox dlg:id="chkOooDev" dlg:tab-index="1" dlg:left="17" dlg:top="36"
-            dlg:width="189" dlg:height="8" dlg:value="ins02" dlg:checked="false" />
+        <!-- <dlg:checkbox dlg:id="chkOooDev" dlg:tab-index="1" dlg:left="17" dlg:top="36"
+            dlg:width="189" dlg:height="8" dlg:value="ins02" dlg:checked="false" /> -->
     </dlg:bulletinboard>
 </dlg:window>

@@ -69,6 +69,9 @@
     </prop>
   </node>
   <node oor:name="Options">
+    <prop oor:name="PandasRequirement" oor:type="xs:string">
+      <value>___pandas_req_xml___</value>
+    </prop>
     <prop oor:name="OptionLoadPandas" oor:type="xs:boolean">
       <value>false</value>
     </prop>
@@ -84,7 +87,7 @@
       <value>true</value>
     </prop>
     <prop oor:name="InstallOooDev" oor:type="xs:boolean">
-      <value>true</value>
+      <value>false</value>
     </prop>
   </node>
 </oor:component-data>

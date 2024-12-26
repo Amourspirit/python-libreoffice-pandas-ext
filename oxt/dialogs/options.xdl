@@ -14,7 +14,11 @@
             dlg:width="198" dlg:height="8" dlg:value="load04" dlg:checked="false" />
         <dlg:checkbox dlg:id="chkNumpy" dlg:tab-index="1" dlg:left="17" dlg:top="36"
             dlg:width="198" dlg:height="8" dlg:value="load03" dlg:checked="false" />
-        <dlg:checkbox dlg:id="chkOooDev" dlg:tab-index="1" dlg:left="17" dlg:top="48"
-            dlg:width="198" dlg:height="8" dlg:value="load02" dlg:checked="false" />
+        <dlg:text dlg:id="lblPandasVersion" dlg:tab-index="0" dlg:left="5" dlg:top="48"
+            dlg:width="213"
+            dlg:height="8" dlg:value="dlgOptLblPandasVer" />
+        <dlg:textfield dlg:id="txtPandasVersion" dlg:tab-index="2" dlg:left="17" dlg:top="60"
+            dlg:width="213"
+            dlg:height="15" />
     </dlg:bulletinboard>
 </dlg:window>
