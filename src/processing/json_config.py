@@ -123,6 +123,7 @@ class JsonConfig(metaclass=Singleton):
             "lo_implementation_name"
         )
         json_config["pandas_req"] = token.get_token_value("pandas_req")
+        json_config["oxt_name"] = token.get_token_value("oxt_name")
         json_config["extension_version"] = self._extension_version
         json_config["extension_license"] = self._extension_license
 
