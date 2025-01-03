@@ -49,6 +49,10 @@ class BasicConfig(metaclass=ConfigMeta):
             kwargs["requirements"] = {}
         self._requirements: Dict[str, str] = dict(**kwargs["requirements"])
 
+        # region Project Specific
+        self._package_name = str(kwargs["package_name"])
+        # endregion Project Specific
+
     # region Properties
     @property
     def auto_install_in_site_packages(self) -> bool:
@@ -173,6 +177,15 @@ class BasicConfig(metaclass=ConfigMeta):
         The value for this property can be set in pyproject.toml (tool.oxt.token.oxt_name)
         """
         return self._oxt_name
+
+    @property
+    def package_name(self) -> str:
+        """
+        Gets the package name for the project. Something like ``numpy`` or ``pandas``.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.config.package_name)
+        """
+        return self._package_name
 
     @property
     def py_pkg_dir(self) -> str:

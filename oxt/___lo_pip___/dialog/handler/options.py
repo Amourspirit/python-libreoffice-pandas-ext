@@ -70,8 +70,8 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
         self._load_pandas_original = False
         self._load_numpy = False
         self._load_numpy_original = False
-        self._pandas_requirement = ""
-        self._pandas_requirement_original = ""
+        self._package_requirement = ""
+        self._package_requirement_original = ""
         self._load_ooo_dev = False
         self._logger.debug("__init__ done")
 
@@ -93,7 +93,7 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
     # endregion XContainerWindowEventHandler
 
     def _has_options_changed(self):
-        if self._pandas_requirement != self._pandas_requirement_original:
+        if self._package_requirement != self._package_requirement_original:
             return True
         if self.load_numpy != self._load_numpy_original:
             return True
@@ -120,7 +120,7 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
             self._logger.debug("_save_data name not equal to window_name. Returning.")
             return
         try:
-            txt_np_ver = cast("UnoControlEdit", window.getControl("txtPandasVersion"))
+            txt_np_ver = cast("UnoControlEdit", window.getControl("txtPackageVersion"))
             txt = txt_np_ver.getText()
 
             if txt:
@@ -145,7 +145,7 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
 
                 if matched_rules:
                     matched_str = ", ".join(matched_rules)
-                    self.pandas_requirement = matched_str
+                    self.package_requirement = matched_str
                     self._logger.debug("_save_data() Matched Rules: %s", matched_str)
                 else:
                     self._logger.error(
@@ -154,12 +154,12 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                     )
                     raise InvalidVersion(txt)
             else:
-                self.pandas_requirement = ""
+                self.package_requirement = ""
                 self._logger.debug("_save_data() No version entered")
 
             settings: SettingsT = {
-                "names": ("OptionLoadPandas", "OptionLoadNumpy", "PandasRequirement"),
-                "values": (self.load_pandas, self.load_numpy, self.pandas_requirement),  # type: ignore
+                "names": ("OptionLoadPandas", "OptionLoadNumpy", "PackageRequirement"),
+                "values": (self.load_pandas, self.load_numpy, self.package_requirement),  # type: ignore
             }
             if self._logger.is_debug:
                 self._logger.debug("_save_data() settings: %s" % settings)
@@ -211,7 +211,7 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
         from importlib.metadata import PackageNotFoundError, version
 
         with contextlib.suppress(PackageNotFoundError):
-            return version("pandas")
+            return version(self._config.package_name)
         return ""
 
     def _load_data(self, window: UnoControlDialog, ev_name: str):
@@ -228,14 +228,14 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                 self.load_numpy = bool(settings["OptionLoadNumpy"])
                 self._load_numpy_original = self.load_numpy
                 self._load_pandas_original = self.load_pandas
-                self.pandas_requirement = str(settings.get("PandasRequirement", ""))
+                self.package_requirement = str(settings.get("PackageRequirement", ""))
                 self._logger.debug("_load_data() Load Pandas: %s", self.load_pandas)
                 self._logger.debug("_load_data() Load Numpy: %s", self.load_numpy)
 
-                self._pandas_requirement_original = self.pandas_requirement
-                if self.pandas_requirement:
+                self._package_requirement_original = self.package_requirement
+                if self.package_requirement:
                     self._logger.debug(
-                        "_load_data() Pandas Requirement: %s", self.pandas_requirement
+                        "_load_data() Pandas Requirement: %s", self.package_requirement
                     )
                 else:
                     self._logger.debug("_load_data() Numpy Requirement not set.")
@@ -243,12 +243,12 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
             control_options = {
                 "chkPandas": "OptionLoadPandas",
                 "chkNumpy": "OptionLoadNumpy",
-                "txtPandasVersion": "PandasRequirement",
+                "txtPackageVersion": "PackageRequirement",
             }
             control_values = {
                 "chkPandas": self.load_pandas,
                 "chkNumpy": self.load_numpy,
-                "txtPandasVersion": self.pandas_requirement,
+                "txtPackageVersion": self.package_requirement,
             }
             if self._logger.is_debug:
                 self._logger.debug("_load_data() controls: %s", control_options)
@@ -302,7 +302,7 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                             "_load_data() txt_ctl_value: %s", txt_ctl_value
                         )
                         txt_control.setText(txt_ctl_value)
-                        if model.Name == "txtPandasVersion":
+                        if model.Name == "txtPackageVersion":
                             model.HelpText = self._resource_resolver.resolve_string(
                                 "dlgOptVerHelp"
                             )
@@ -354,9 +354,9 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
         self._load_ooo_dev = value
 
     @property
-    def pandas_requirement(self) -> str:
-        return self._pandas_requirement
+    def package_requirement(self) -> str:
+        return self._package_requirement
 
-    @pandas_requirement.setter
-    def pandas_requirement(self, value: str):
-        self._pandas_requirement = value
+    @package_requirement.setter
+    def package_requirement(self, value: str):
+        self._package_requirement = value

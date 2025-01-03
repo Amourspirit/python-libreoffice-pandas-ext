@@ -117,11 +117,11 @@ class Packages:
         """
 
         opt = Options()
-        if not opt.pandas_requirement:
+        if not opt.package_requirement:
             self._log.debug("process_packages() No Numpy requirement set in options.")
             return packages
         rules = VerRules()
-        matched_rules = rules.get_matched_rules(opt.pandas_requirement)
+        matched_rules = rules.get_matched_rules(opt.package_requirement)
         if not matched_rules:
             self._log.error("process_packages() No rules matched for Numpy.")
             return packages
@@ -136,12 +136,14 @@ class Packages:
             self._log.error("process_packages() No versions found for Numpy.")
             return packages
         # remove numpy from packages
-        packages = [pkg for pkg in packages if pkg.get("name") != "pandas"]
+        packages = [
+            pkg for pkg in packages if pkg.get("name") != self._config.package_name
+        ]
 
         for ver in req_versions:
             packages.append(
                 {
-                    "name": "pandas",
+                    "name": self._config.package_name,
                     "version": str(ver),
                     "restriction": ver.prefix,
                     "platforms": ["all"],

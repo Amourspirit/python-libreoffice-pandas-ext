@@ -131,15 +131,16 @@ class Config(metaclass=Singleton):
 
     # region Methods
     def _set_requirements(self, req: Dict[str, str]) -> None:
-        if "pandas" not in req:
+        if self._basic_config.package_name not in req:
             self._logger.debug(
-                "Pandas requirement not part of pyproject.toml tool.oxt.requirements"
+                "%s requirement not part of pyproject.toml tool.oxt.requirements",
+                self._basic_config.package_name,
             )
             return
         from .settings.options import Options
 
         options = Options()
-        pandas_ver = options.pandas_requirement
+        pandas_ver = options.package_requirement
         ver_rules = VerRules()
         matched_rules = ver_rules.get_matched_rules(pandas_ver)
         ver_strings = []
@@ -149,9 +150,11 @@ class Config(metaclass=Singleton):
         if ver_strings:
             txt_ver = ",".join(ver_strings)
             self._logger.debug(
-                "Setting from LO options - Pandas requirement: '%s'", txt_ver
+                "Setting from LO options - %s requirement: '%s'",
+                self._basic_config.package_name,
+                txt_ver,
             )
-            req["pandas"] = txt_ver
+            req[self._basic_config.package_name] = txt_ver
         else:
             self._logger.error("Invalid Pandas requirement: %s", pandas_ver)
 
@@ -665,6 +668,15 @@ class Config(metaclass=Singleton):
         The value for this property can be set in pyproject.toml (tool.oxt.token.oxt_name)
         """
         return self._basic_config.oxt_name
+
+    @property
+    def package_name(self) -> str:
+        """
+        Gets the package name for the project. Something like ``numpy`` or ``pandas``.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.config.package_name)
+        """
+        return self._basic_config.package_name
 
     # endregion Properties
 

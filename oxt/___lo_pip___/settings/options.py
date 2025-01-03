@@ -13,8 +13,8 @@ class Options(metaclass=Singleton):
         self._configuration = Configuration()
         self._node_value = f"/{settings.lo_implementation_name}.Settings/Options"
 
-        self._pandas_requirement = str(
-            settings.current_settings.get("PandasRequirement", "")
+        self._package_requirement = str(
+            settings.current_settings.get("PackageRequirement", "")
         )
         self._load_pandas = bool(
             settings.current_settings.get("OptionLoadPandas", False)
@@ -47,10 +47,10 @@ class Options(metaclass=Singleton):
         return self._load_ooo_dev
 
     @property
-    def pandas_requirement(self) -> str:
+    def package_requirement(self) -> str:
         """
         Gets the Pandas Requirement.
         """
-        return self._pandas_requirement
+        return self._package_requirement
 
     # endregion Properties

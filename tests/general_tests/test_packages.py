@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Dict, TYPE_CHECKING
+from typing import cast, List, Dict, TYPE_CHECKING
 
 import pytest
 
@@ -433,23 +433,30 @@ def test_packages_option_override(
 ):
     # this test simulates the option override of numpy package.
     # It simulate that the user has entered a version of numpy that is different from the default version.
+    import toml
+    from src.config import Config
+
+    config = Config()
+    cfg = toml.load(config.toml_path)
+    package_name = cast(str, cfg["tool"]["oxt"]["config"]["package_name"])
+
     packages = [
         {
-            "name": "numpy",
+            "name": package_name,
             "version": "1.24.4",
             "restriction": "==",
             "platforms": ["all"],
             "python_versions": ["<3.9"],
         },
         {
-            "name": "numpy",
+            "name": package_name,
             "version": "2.0",
             "restriction": "~",
             "platforms": ["all"],
             "python_versions": [">=3.9", "<=3.10"],
         },
         {
-            "name": "numpy",
+            "name": package_name,
             "version": "2.2",
             "restriction": ">=",
             "platforms": ["all"],
@@ -467,6 +474,7 @@ def test_packages_option_override(
     mock_config_instance.is_win = False
     mock_config_instance.is_mac = False
     mock_config_instance.is_linux = True
+    mock_config_instance.package_name = package_name
 
     _ = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.OxtLogger")
 
@@ -478,7 +486,7 @@ def test_packages_option_override(
 
     mock_options = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.Options")
     mock_options_instance = mock_options.return_value
-    mock_options_instance.numpy_requirement = opt_ver
+    mock_options_instance.package_requirement = opt_ver
 
     from oxt.___lo_pip___.install.py_packages.packages import Packages
     from oxt.___lo_pip___.ver.req_version import ReqVersion
@@ -489,7 +497,7 @@ def test_packages_option_override(
     matched_numpy: List[PyPackage] = []
     # ver_rules = VerRules()
     for pkg in pkgs.packages:
-        if pkg.name == "pandas":
+        if pkg.name == package_name:
             matched_numpy.append(pkg)
 
     assert len(matched_numpy) == match_count
@@ -497,4 +505,4 @@ def test_packages_option_override(
     if not opt_ver.startswith(("^", "~", "!=")):
         first = matched_numpy[0]
         first_ver = ReqVersion(opt_ver.split(",")[0])
-        assert first.name_version == ("pandas", f"{first_ver.prefix}{first_ver}")
+        assert first.name_version == (package_name, f"{first_ver.prefix}{first_ver}")

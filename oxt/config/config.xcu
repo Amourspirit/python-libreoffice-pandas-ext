@@ -69,7 +69,7 @@
     </prop>
   </node>
   <node oor:name="Options">
-    <prop oor:name="PandasRequirement" oor:type="xs:string">
+    <prop oor:name="PackageRequirement" oor:type="xs:string">
       <value></value>
     </prop>
     <prop oor:name="OptionLoadPandas" oor:type="xs:boolean">
