@@ -110,7 +110,7 @@ class Packages:
         """
         Process packages.
 
-        If Numpy requirement is set in options, override Numpy packages to versions set in options.
+        If Package requirement is set in options, override Packages packages to versions set in options.
 
         Args:
             packages (List[Dict[str, str]]): List of packages to process
@@ -118,12 +118,17 @@ class Packages:
 
         opt = Options()
         if not opt.package_requirement:
-            self._log.debug("process_packages() No Numpy requirement set in options.")
+            self._log.debug(
+                "process_packages() No %s requirement set in options.",
+                opt.package_requirement,
+            )
             return packages
         rules = VerRules()
         matched_rules = rules.get_matched_rules(opt.package_requirement)
         if not matched_rules:
-            self._log.error("process_packages() No rules matched for Numpy.")
+            self._log.error(
+                "process_packages() No rules matched for %s.", opt.package_requirement
+            )
             return packages
 
         req_versions: List[ReqVersion] = []
@@ -133,7 +138,9 @@ class Packages:
                 req_versions.append(ReqVersion(part))
 
         if not req_versions:
-            self._log.error("process_packages() No versions found for Numpy.")
+            self._log.error(
+                "process_packages() No versions found for %s.", opt.package_requirement
+            )
             return packages
         # remove numpy from packages
         packages = [
