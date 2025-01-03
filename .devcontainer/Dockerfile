@@ -96,7 +96,7 @@ ENV VIRTUAL_ENV=/workspace/libreoffice_pandas_ext/.venv
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-install-project $(test "$RUN_ENV" == production && echo "--no-dev") \
-    && sed -i "s/include-system-site-packages = false/include-system-site-packages = false/g" /workspace/libreoffice_pandas_ext/.venv/pyvenv.cfg \
+    && sed -i "s/include-system-site-packages = false/include-system-site-packages = true/g" /workspace/libreoffice_pandas_ext/.venv/pyvenv.cfg \
     && if [ -f "$CONFIG_DIR/.tmp/res/req/requirements.txt" ]; then \
     uv pip install --requirement "$CONFIG_DIR/.tmp/res/req/requirements.txt"; fi
 
