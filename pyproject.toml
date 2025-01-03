@@ -1,6 +1,6 @@
 [project]
 name = "lo_pandas_ext"
-version = "2.0.0"
+version = "2.1.0"
 description = "Pandas for LibreOffice"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -52,7 +52,7 @@ python_versions=[">=3.9"]
 [tool.oxt.config]
 auto_install_in_site_packages = true
 build_dir = "build"
-dist_dir = "tmp_dist" # should be changed to someting like dist, tmp_dist is not included in git
+dist_dir = "dist" # should be changed to someting like dist, tmp_dist is not included in git
 install_wheel = true
 oxt_name = "pandas"
 py_pkg_dir = "py_pkgs"
