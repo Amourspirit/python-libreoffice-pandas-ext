@@ -1,6 +1,6 @@
 [project]
 name = "lo_pandas_ext"
-version = "2.0.0"
+version = "2.1.0"
 description = "Pandas for LibreOffice"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -29,8 +29,23 @@ dev = [
 ]
 
 [tool.oxt.requirements]
-pandas = ">=2"
+# pandas = ">=2"
 odfpy = ">=1.4"
+
+[[tool.oxt.py_packages]]
+# https://amour_spirit.pyscriptapps.com/version-runner/latest/
+name="pandas"
+version="2.0"
+restriction="~"
+platforms=["all"]
+python_versions=["<=3.9"]
+
+[[tool.oxt.py_packages]]
+name="pandas"
+version="2.2"
+restriction=">="
+platforms=["all"]
+python_versions=[">=3.9"]
 
 
 # See: https://github.com/Amourspirit/python-libreoffice-pandas-ext/wiki/pyproject.toml
@@ -54,6 +69,7 @@ default_locale = ["en", "US"]
 sym_link_cpython = true
 uninstall_on_update = true # https://tinyurl.com/ymeh4c9j#uninstall_on_update uninstall previous python packages on update
 install_on_no_uninstall_permission = true # https://tinyurl.com/ymeh4c9j#install_on_no_uninstall_permission
+package_name="pandas" # specific to this project. If this project is cloned and renamed, this should be changed to make a new package easily.
 
 [tool.oxt.token]
 # in the form of "token_name": "token_value"

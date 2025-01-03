@@ -5,6 +5,7 @@ No Internet needed.
 """
 
 from __future__ import annotations
+import sys
 
 from importlib.metadata import PackageNotFoundError, version
 
@@ -12,6 +13,8 @@ from ..config import Config
 from ..ver.rules.ver_rules import VerRules
 from ..oxt_logger import OxtLogger
 from ..meta.singleton import Singleton
+from .py_packages.packages import Packages
+from .py_packages.py_package import PyPackage
 
 
 class RequirementsCheck(metaclass=Singleton):
@@ -29,10 +32,38 @@ class RequirementsCheck(metaclass=Singleton):
         Returns:
             bool: ``True`` if requirements are installed; Otherwise, ``False``.
         """
-        return all(
+        requirements_met = all(
             self._is_valid_version(name=name, ver=ver) == 0
             for name, ver in self._config.requirements.items()
         )
+        if not requirements_met:
+            self._logger.error("Requirements not met.")
+            return False
+
+        ver_rules = VerRules()
+
+        def check_installed_valid(pkg: PyPackage):
+            nonlocal ver_rules
+            ver_str = self._get_package_version(pkg.name)
+            if not ver_str:
+                self._logger.debug("Package %s not installed ...", pkg.name)
+                return False
+            try:
+                _, pkg_ver = pkg.name_version
+                return ver_rules.get_installed_is_valid(
+                    vstr=pkg_ver, check_version=ver_str
+                )
+            except Exception as e:
+                self._logger.error(e)
+            return False
+
+        pkgs = Packages()
+        requirements_met = all(check_installed_valid(pkg) for pkg in pkgs.packages)
+        if not requirements_met:
+            self._logger.info("Requirements not met.")
+            return False
+        self._logger.info("Requirements are met")
+        return True
 
     def _get_package_version(self, package_name: str) -> str:
         """

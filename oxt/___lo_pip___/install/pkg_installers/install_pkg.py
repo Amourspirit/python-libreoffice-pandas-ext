@@ -19,6 +19,7 @@ from ...oxt_logger import OxtLogger
 from ...ver.rules.ver_rules import VerRules, VerProto
 from ..download import Download
 from ..progress import Progress
+from ..py_packages.packages import Packages
 
 
 # https://docs.python.org/3.8/library/importlib.metadata.html#module-importlib.metadata
@@ -142,10 +143,10 @@ class InstallPkg:
             err_msg = f"Pip Install failed for: {pkg_cmd}"
 
         site_packages_dir = self._get_site_packages_dir(pkg)
-
         is_ignore = False
         before_dirs = self._get_directory_names(site_packages_dir)
         before_files = self._get_file_names(site_packages_dir)
+        before_bin_files = self._get_file_names(Path(site_packages_dir, "bin"))
 
         progress: Progress | None = None
         if self._config.show_progress and self.show_progress:
@@ -178,11 +179,14 @@ class InstallPkg:
                 self._delete_json_file(site_packages_dir, pkg)
                 after_dirs = self._get_directory_names(site_packages_dir)
                 after_files = self._get_file_names(site_packages_dir)
+                after_bin_files = self._get_file_names(Path(site_packages_dir, "bin"))
                 self._save_changed(
                     pkg=pkg,
                     pth=site_packages_dir,
                     before_files=before_files,
+                    before_bin_files=before_bin_files,
                     after_files=after_files,
+                    after_bin_files=after_bin_files,
                     before_dirs=before_dirs,
                     after_dirs=after_dirs,
                 )
@@ -217,6 +221,13 @@ class InstallPkg:
             search_pattern = os.path.join(directory, pattern)
             return glob.glob(search_pattern)
 
+        step = 1
+        self.log.debug(
+            f"Attempting to uninstalling package via json package info for {pkg}: Step {step}"
+        )
+        site_packages_dir = self._get_site_packages_dir(pkg)
+        self._remove_changed(site_packages_dir, pkg)
+
         if not target:
             target = self._target_path.get_package_target(pkg)
         if self.log.is_debug:
@@ -232,7 +243,7 @@ class InstallPkg:
         self.log.debug(f"uninstall_package() dist_info_dir: {dist_info_dir}")
 
         success = True
-        step = 1
+        step = 2
 
         if dist_info_dir:
             if os.path.exists(dist_info_dir):
@@ -255,7 +266,7 @@ class InstallPkg:
                 f"uninstall_package() no dist-info found for {pkg}. Step {step}"
             )
 
-        step = 2
+        step = 3
         if not success:
             self.log.error(
                 f"uninstall_package() Incomplete removal for {pkg} in step {step}"
@@ -280,7 +291,7 @@ class InstallPkg:
 
         # just in case there are multiple dist-info folders from previous bad uninstalls,
         # we will remove all of them.
-        step = 3
+        step = 4
         if not success:
             self.log.error(
                 f"uninstall_package() Incomplete removal for {pkg} in step {step}"
@@ -315,7 +326,7 @@ class InstallPkg:
                         f"uninstall_package() dist_info_pattern: {dist_info_pattern} found no more dist-info folders. Step {step}"
                     )
 
-        step = 4
+        step = 5
         if not success:
             self.log.error(
                 f"uninstall_package() Incomplete removal for {pkg} in step {step}"
@@ -335,7 +346,7 @@ class InstallPkg:
                     )
                     # this is not critical so we will continue
 
-        step = 5
+        step = 6
         if not success:
             self.log.error(
                 f"uninstall_package() Incomplete removal for {pkg} in step {step}"
@@ -371,7 +382,10 @@ class InstallPkg:
         self._logger.info("Installing packages…")
 
         if req is None:
+            packages = Packages()
+
             req = self._config.requirements.copy()
+            req.update(packages.to_dict())
         else:
             self._logger.debug("Using requirements from parameter.")
 
@@ -542,18 +556,28 @@ class InstallPkg:
         """Get the site-packages directory."""
         return self._target_path.get_package_target(pkg)
 
-    def _get_file_names(self, path: str) -> List[str]:
+    def _get_file_names(self, path: str | Path) -> List[str]:
         # only get the file names in the specified path
+
+        if isinstance(path, str):
+            pth = Path(path)
+        else:
+            pth = path
+        if not pth.exists():
+            return []
+        str_pth = str(pth)
         return [
             name
-            for name in os.listdir(path)
-            if os.path.isfile(os.path.join(path, name))
+            for name in os.listdir(str_pth)
+            if os.path.isfile(os.path.join(str_pth, name))
         ]
 
     def _get_directory_names(self, path: str) -> List[str]:
         """Get the directory names in the specified path."""
         return [
-            name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))
+            name
+            for name in os.listdir(path)
+            if name != "bin" and os.path.isdir(os.path.join(path, name))
         ]
 
     def _save_changed(
@@ -561,7 +585,9 @@ class InstallPkg:
         pkg: str,
         pth: str,
         before_files: List[str],
+        before_bin_files: List[str],
         after_files: List[str],
+        after_bin_files: List[str],
         before_dirs: List[str],
         after_dirs: List[str],
     ) -> None:
@@ -571,11 +597,16 @@ class InstallPkg:
             """Create a JSON file with the file names."""
             new_dirs = list(set(after_dirs) - set(before_dirs))
             new_files = list(set(after_files) - set(before_files))
+            new_bin_files = list(set(after_bin_files) - set(before_bin_files))
             data = {
                 "id": f"{self._config.oxt_name}_pip_pkg",
                 "package": pkg,
                 "version": self._config.extension_version,
-                "data": {"new_dirs": new_dirs, "new_files": new_files},
+                "data": {
+                    "new_dirs": new_dirs,
+                    "new_files": new_files,
+                    "new_bin_files": new_bin_files,
+                },
             }
             return json.dumps(data, indent=4)
 
@@ -605,33 +636,31 @@ class InstallPkg:
         json_path = os.path.join(
             path, f"{self._config.lo_implementation_name}_{pkg}.json"
         )
+        j_contents = {}
         if os.path.exists(json_path):
             with open(json_path, "r") as f:
-                return json.load(f)
-        return {}
+                j_contents = json.load(f)
+                data = j_contents.get("data", {})
+                if "bin" not in data:
+                    data["bin"] = []
 
-    def _remove_json_data(self, path: str, pkg: str) -> None:
-        """Remove the JSON data if it exists."""
-        json_path = os.path.join(
-            path, f"{self._config.lo_implementation_name}_{pkg}.json"
-        )
-        if os.path.exists(json_path):
-            os.remove(json_path)
-            self._logger.info(f"Deleted {json_path}")
+        return j_contents
 
     # check and see if there are any directories and files that need to be removed. Us the Json file to get the data
-    def _remove_changed(self, pkg: str, pth: str) -> None:
+    def _remove_changed(self, pth: str, pkg: str) -> None:
         """Remove the new directories and files."""
         data_dict = self._get_json_data(pth, pkg)
         data: Dict[str, str] = data_dict.get("data", {})
-        new_dirs = data.get("new_dirs", [])
-        new_files = data.get("new_files", [])
+        new_dirs = set(data.get("new_dirs", []))
+        if "bin" in new_dirs:
+            new_dirs.remove("bin")
+
         for d in new_dirs:
             dir_path = os.path.join(pth, d)
             try:
                 if os.path.exists(dir_path):
                     shutil.rmtree(dir_path)
-                    self._logger.info(f"_remove_changed() Removed directory: {d}")
+                    self._logger.debug(f"_remove_changed() Removed directory: {d}")
                 else:
                     self._logger.debug(
                         f"_remove_changed() Directory {d} does not exist."
@@ -640,18 +669,36 @@ class InstallPkg:
                 self._logger.error(
                     f"_remove_changed() Error removing directory {d}: {e}"
                 )
+
+        new_files = data.get("new_files", [])
         for f in new_files:
-            file_path = os.path.join(pth, f)
+            file_path = Path(pth, f)
             try:
                 if os.path.exists(file_path):
-                    os.remove(file_path)
-                    self._logger.info(f"_remove_changed() Removed file: {f}")
+                    file_path.unlink()
+                    self._logger.debug(f"_remove_changed() Removed file: {f}")
                 else:
                     self._logger.debug(f"_remove_changed() File {f} does not exist.")
             except Exception as e:
                 self._logger.error(f"_remove_changed() Error removing file {f}: {e}")
-        self._remove_json_data(pth, pkg)
-        self._logger.info("Removed new directories and files.")
+
+        new_files = data.get("new_bin_files", [])
+        for f in new_files:
+            file_path = Path(pth, "bin", f)
+            try:
+                if file_path.exists():
+                    file_path.unlink()
+                    self._logger.debug(f"_remove_changed() Removed file from bin: {f}")
+                else:
+                    self._logger.debug(
+                        f"_remove_changed() File {f} does not exist in bin."
+                    )
+            except Exception as e:
+                self._logger.error(
+                    f"_remove_changed() Error removing file {f} from bin: {e}"
+                )
+
+        self._logger.info("_remove_changed() Removed new directories and files.")
 
     # endregion Json directory methods
 
