@@ -109,6 +109,16 @@ class JsonConfig(metaclass=Singleton):
         except Exception:
             self._extension_license = ""
 
+        # region Requirements Rule
+        # Access a specific table
+        try:
+            self._py_packages = cast(
+                List[Dict[str, str]], self._cfg["tool"]["oxt"]["py_packages"]
+            )
+        except Exception:
+            self._py_packages = []
+        # endregion Requirements Rule
+
         self._validate()
         self._warnings()
 
@@ -122,10 +132,10 @@ class JsonConfig(metaclass=Singleton):
         json_config["lo_implementation_name"] = token.get_token_value(
             "lo_implementation_name"
         )
-        json_config["pandas_req"] = token.get_token_value("pandas_req")
-        json_config["oxt_name"] = token.get_token_value("oxt_name")
         json_config["extension_version"] = self._extension_version
         json_config["extension_license"] = self._extension_license
+        json_config["oxt_name"] = token.get_token_value("oxt_name")
+        json_config["lo_pip"] = token.get_token_value("lo_pip")
 
         json_config["zipped_preinstall_pure"] = self._zip_preinstall_pure
         json_config["auto_install_in_site_packages"] = (
@@ -147,6 +157,10 @@ class JsonConfig(metaclass=Singleton):
         # update the requirements
         json_config["requirements"] = self._requirements
         json_config["has_locals"] = self._config.has_locals
+
+        # region Requirements Rule
+        json_config["py_packages"] = self._py_packages
+        # endregion Requirements Rule
 
         # save the file
         with open(json_config_path, "w", encoding="utf-8") as f:
@@ -194,6 +208,10 @@ class JsonConfig(metaclass=Singleton):
         assert isinstance(
             self._install_on_no_uninstall_permission, bool
         ), "_install_on_no_uninstall_permission must be a bool"
+
+        assert (
+            self._extension_version.count(".") == 2
+        ), "extension_version must contain two periods"
 
     def _warnings(self) -> None:
         warnings = []

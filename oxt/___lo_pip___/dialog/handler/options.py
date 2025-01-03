@@ -122,38 +122,40 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
         try:
             txt_np_ver = cast("UnoControlEdit", window.getControl("txtPandasVersion"))
             txt = txt_np_ver.getText()
-            if not txt:
-                txt = self._config.pandas_req  # set back to default if cleared
 
-            txt = txt.replace(";", ",")
-            txt_versions = txt.split(",")
+            if txt:
+                txt = txt.replace(";", ",")
+                txt_versions = txt.split(",")
 
-            ver_rules = VerRules()
-            matched_rules: List[str] = []
-            for txt_ver in txt_versions:
-                current = txt_ver.strip()
-                if not current:
-                    continue
-                if current == "*":
-                    current = "==*"
-                rules = ver_rules.get_matched_rules(current)
-                if not rules:
-                    continue
-                for rule in rules:
-                    version_parts = rule.get_versions_str().split(",")
-                    for part in version_parts:
-                        matched_rules.append(part.strip())
+                ver_rules = VerRules()
+                matched_rules: List[str] = []
+                for txt_ver in txt_versions:
+                    current = txt_ver.strip()
+                    if not current:
+                        continue
+                    if current == "*":
+                        current = "==*"
+                    rules = ver_rules.get_matched_rules(current)
+                    if not rules:
+                        continue
+                    for rule in rules:
+                        version_parts = rule.get_versions_str().split(",")
+                        for part in version_parts:
+                            matched_rules.append(part.strip())
 
-            if matched_rules:
-                matched_str = ", ".join(matched_rules)
-                self.pandas_requirement = matched_str
-                self._logger.debug("_save_data() Matched Rules: %s", matched_str)
+                if matched_rules:
+                    matched_str = ", ".join(matched_rules)
+                    self.pandas_requirement = matched_str
+                    self._logger.debug("_save_data() Matched Rules: %s", matched_str)
+                else:
+                    self._logger.error(
+                        "_save_data() Invalid Numpy Requirement: '%s'. Must be in format of ==1.0.0 or >=1.0.0, <2.0.0 or ^1.0 etc.",
+                        txt,
+                    )
+                    raise InvalidVersion(txt)
             else:
-                self._logger.error(
-                    "_save_data() Invalid Pandas Requirement: '%s'. Must be in format of ==1.0.0 or >=1.0.0, <2.0.0 or ^1.0 etc.",
-                    txt,
-                )
-                raise InvalidVersion(txt)
+                self.pandas_requirement = ""
+                self._logger.debug("_save_data() No version entered")
 
             settings: SettingsT = {
                 "names": ("OptionLoadPandas", "OptionLoadNumpy", "PandasRequirement"),
@@ -226,15 +228,17 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                 self.load_numpy = bool(settings["OptionLoadNumpy"])
                 self._load_numpy_original = self.load_numpy
                 self._load_pandas_original = self.load_pandas
+                self.pandas_requirement = str(settings.get("PandasRequirement", ""))
                 self._logger.debug("_load_data() Load Pandas: %s", self.load_pandas)
                 self._logger.debug("_load_data() Load Numpy: %s", self.load_numpy)
-                self.pandas_requirement = str(
-                    settings.get("PandasRequirement", self._config.pandas_req)
-                )
+
                 self._pandas_requirement_original = self.pandas_requirement
-                self._logger.debug(
-                    "_load_data() Pandas Requirement: %s", self.pandas_requirement
-                )
+                if self.pandas_requirement:
+                    self._logger.debug(
+                        "_load_data() Pandas Requirement: %s", self.pandas_requirement
+                    )
+                else:
+                    self._logger.debug("_load_data() Numpy Requirement not set.")
 
             control_options = {
                 "chkPandas": "OptionLoadPandas",

@@ -70,7 +70,7 @@
   </node>
   <node oor:name="Options">
     <prop oor:name="PandasRequirement" oor:type="xs:string">
-      <value>___pandas_req_xml___</value>
+      <value></value>
     </prop>
     <prop oor:name="OptionLoadPandas" oor:type="xs:boolean">
       <value>false</value>

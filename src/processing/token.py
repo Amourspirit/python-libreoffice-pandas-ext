@@ -21,12 +21,6 @@ class Token(metaclass=Singleton):
         self._tokens["___license___"] = str(cfg["project"]["license"])
         self._tokens["___oxt_name___"] = str(cfg["tool"]["oxt"]["config"]["oxt_name"])
         self._tokens["___dist_dir___"] = str(cfg["tool"]["oxt"]["config"]["dist_dir"])
-        self._tokens["___pandas_req_xml___"] = self.escape_xml(
-            cfg["tool"]["oxt"]["requirements"]["pandas"]
-        )
-        self._tokens["___pandas_req___"] = str(
-            cfg["tool"]["oxt"]["requirements"]["pandas"]
-        )
         self._tokens["___update_file___"] = str(
             cfg["tool"]["oxt"]["config"]["update_file"]
         )
@@ -151,15 +145,6 @@ class Token(metaclass=Singleton):
         """
         return self._tokens.get(f"___{token}___", "")
 
-    def escape_xml(self, s: str) -> str:
-        return (
-            s.replace("&", "&amp;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;")
-            .replace('"', "&quot;")
-            .replace("'", "&apos;")
-        )
-
     def _get_authors(self, cfg: Dict[str, Any]) -> List[str]:
         """Returns the authors."""
         authors = cast(List[Dict[str, str]], cfg["project"]["authors"])
@@ -168,6 +153,15 @@ class Token(metaclass=Singleton):
             if "name" in author:
                 results.append(author["name"])
         return results
+
+    def escape_xml(self, s: str) -> str:
+        return (
+            s.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace('"', "&quot;")
+            .replace("'", "&apos;")
+        )
 
     # endregion Methods
 

@@ -22,6 +22,7 @@ class BasicConfig(metaclass=ConfigMeta):
     def __init__(self, **kwargs) -> None:
         self._py_pkg_dir = str(kwargs["py_pkg_dir"])
         self._lo_identifier = str(kwargs["lo_identifier"])
+        self._lo_pip_dir = str(kwargs["lo_pip"])
         self._lo_implementation_name = str(kwargs["lo_implementation_name"])
         self._zipped_preinstall_pure = bool(kwargs["zipped_preinstall_pure"])
         self._auto_install_in_site_packages = bool(
@@ -40,7 +41,6 @@ class BasicConfig(metaclass=ConfigMeta):
         self._install_on_no_uninstall_permission = bool(
             kwargs["install_on_no_uninstall_permission"]
         )
-        self._pandas_req = str(kwargs["pandas_req"])
         self._oxt_name = str(kwargs["oxt_name"])
         self._extension_version = str(kwargs["extension_version"])
         self._extension_license = str(kwargs["extension_license"])
@@ -157,6 +157,15 @@ class BasicConfig(metaclass=ConfigMeta):
         return self._lo_implementation_name
 
     @property
+    def lo_pip_dir(self) -> str:
+        """
+        Gets the Main Library directory name for this extension.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.token.lo_pip)
+        """
+        return self._lo_pip_dir
+
+    @property
     def oxt_name(self) -> str:
         """
         Gets the Otx name of the extension without the ``.otx`` extension.
@@ -164,15 +173,6 @@ class BasicConfig(metaclass=ConfigMeta):
         The value for this property can be set in pyproject.toml (tool.oxt.token.oxt_name)
         """
         return self._oxt_name
-
-    @property
-    def pandas_req(self) -> str:
-        """
-        Gets the Pandas Requirement defined in pyproject.toml.
-
-        The value for this property can be set in pyproject.toml (tool.oxt.requirements.pandas)
-        """
-        return self._pandas_req
 
     @property
     def py_pkg_dir(self) -> str:

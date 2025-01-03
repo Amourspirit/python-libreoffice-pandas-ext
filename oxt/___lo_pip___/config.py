@@ -132,7 +132,9 @@ class Config(metaclass=Singleton):
     # region Methods
     def _set_requirements(self, req: Dict[str, str]) -> None:
         if "pandas" not in req:
-            self._logger.error("Pandas requirement not set in pyproject.toml")
+            self._logger.debug(
+                "Pandas requirement not part of pyproject.toml tool.oxt.requirements"
+            )
             return
         from .settings.options import Options
 
@@ -663,15 +665,6 @@ class Config(metaclass=Singleton):
         The value for this property can be set in pyproject.toml (tool.oxt.token.oxt_name)
         """
         return self._basic_config.oxt_name
-
-    @property
-    def pandas_req(self) -> str:
-        """
-        Gets the Pandas Requirement defined in pyproject.toml.
-
-        The value for this property can be set in pyproject.toml (tool.oxt.requirements.pandas)
-        """
-        return self._basic_config.pandas_req
 
     # endregion Properties
 
