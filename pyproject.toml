@@ -1,6 +1,6 @@
 [project]
 name = "lo_pandas_ext"
-version = "2.1.1"
+version = "2.2.0"
 description = "Pandas for LibreOffice"
 readme = "README.md"
 requires-python = ">=3.8"
