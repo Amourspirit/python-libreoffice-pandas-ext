@@ -15,6 +15,7 @@
         "endregion",
         "flatpak",
         "getpgid",
+        "INFOBOX",
         "Killable",
         "killpg",
         "levelname",

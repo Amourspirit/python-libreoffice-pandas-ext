@@ -47,12 +47,17 @@ restriction=">="
 platforms=["all"]
 python_versions=[">=3.9"]
 
+[tool.oxt.uninstall_gui_mapping]
+# map uninstall gui checkboxes to packages
+chkPkg1="odfpy"
+chkPkgName="pandas"
+
 
 # See: https://github.com/Amourspirit/python-libreoffice-pandas-ext/wiki/pyproject.toml
 [tool.oxt.config]
 auto_install_in_site_packages = true
 build_dir = "build"
-dist_dir = "dist" # should be changed to someting like dist, tmp_dist is not included in git
+dist_dir = "tmp_dist" # should be changed to someting like dist, tmp_dist is not included in git
 install_wheel = true
 oxt_name = "pandas"
 py_pkg_dir = "py_pkgs"
@@ -68,6 +73,7 @@ resource_properties_prefix = "pipstrings"
 default_locale = ["en", "US"]
 sym_link_cpython = true
 uninstall_on_update = true # https://tinyurl.com/ymeh4c9j#uninstall_on_update uninstall previous python packages on update
+no_pip_remove = ["pip", "setuptools", "wheel"]
 install_on_no_uninstall_permission = true # https://tinyurl.com/ymeh4c9j#install_on_no_uninstall_permission
 package_name="pandas" # specific to this project. If this project is cloned and renamed, this should be changed to make a new package easily.
 
@@ -89,7 +95,7 @@ url_pip = 'https://bootstrap.pypa.io/get-pip.py'
 # set log_file to "" to disable logging
 log_file = "pandas_install.log"
 log_name = "Pandas Installer"
-log_level = "INFO" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
+log_level = "DEBUG" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
 log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 log_add_console = false # should be false for production
 lo_pip = "lo_pandas"
@@ -150,10 +156,13 @@ include = ["src"]
 reportMissingModuleSource = false
 
 [tool.ruff]
-extended-select = ["ANN", "C4", "N", "SIM", "TCH"]
+# https://docs.astral.sh/ruff/configuration/
+line-length = 119
+indent-width = 4
+select = ["ANN", "C4", "N", "SIM"]
 ignore = ["E501"]
 show-fixes = true
-target = "py38"
+target-version = "py38"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
