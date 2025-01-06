@@ -27,6 +27,9 @@ class InstallPkgFlatpak(InstallPkg):
         Returns:
             bool: True if successful, False otherwise.
         """
+        if pkg in self.no_pip_install:
+            self._logger.debug("_install_pkg() %s is in the no install list. Not Installing and continuing.", pkg)
+            return True
 
         if not self.config.site_packages:
             self._logger.error(

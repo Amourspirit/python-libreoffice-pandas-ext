@@ -57,7 +57,7 @@ chkPkgName="pandas"
 [tool.oxt.config]
 auto_install_in_site_packages = true
 build_dir = "build"
-dist_dir = "tmp_dist" # should be changed to someting like dist, tmp_dist is not included in git
+dist_dir = "dist" # should be changed to someting like dist, tmp_dist is not included in git
 install_wheel = true
 oxt_name = "pandas"
 py_pkg_dir = "py_pkgs"
@@ -95,7 +95,7 @@ url_pip = 'https://bootstrap.pypa.io/get-pip.py'
 # set log_file to "" to disable logging
 log_file = "pandas_install.log"
 log_name = "Pandas Installer"
-log_level = "DEBUG" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
+log_level = "INFO" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
 log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 log_add_console = false # should be false for production
 lo_pip = "lo_pandas"

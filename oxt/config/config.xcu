@@ -83,11 +83,8 @@
     </prop>
   </node>
   <node oor:name="Install">
-    <prop oor:name="InstallOdfpy" oor:type="xs:boolean">
-      <value>true</value>
-    </prop>
-    <prop oor:name="InstallOooDev" oor:type="xs:boolean">
-      <value>false</value>
+    <prop oor:name="NoInstallPackages" oor:type="oor:string-list">
+      <value></value>
     </prop>
   </node>
 </oor:component-data>

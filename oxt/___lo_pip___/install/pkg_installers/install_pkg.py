@@ -6,7 +6,7 @@ import subprocess
 import glob
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Set
 
 
 # import pkg_resources
@@ -20,6 +20,7 @@ from ...ver.rules.ver_rules import VerRules, VerProto
 from ..download import Download
 from ..progress import Progress
 from ..py_packages.packages import Packages
+from ...settings.install_settings import InstallSettings
 
 
 # https://docs.python.org/3.8/library/importlib.metadata.html#module-importlib.metadata
@@ -59,7 +60,9 @@ class InstallPkg:
         self._show_progress = bool(kwargs.get("show_progress", self._config.show_progress))
         self._resource_resolver = ResourceResolver(ctx=self.ctx)
         self._target_path = TargetPath()
-        self._no_pip_remove = self._config.no_pip_remove  # {"pip", "setuptools", "wheel"}
+        self._no_pip_remove = self._config.no_pip_remove.copy()  # {"pip", "setuptools", "wheel"}
+        install_settings = InstallSettings()
+        self._no_pip_install = install_settings.no_install_packages.copy()
 
     def _get_logger(self) -> OxtLogger:
         return OxtLogger(log_name=__name__)
@@ -101,6 +104,10 @@ class InstallPkg:
         Returns:
             bool: True if successful, False otherwise.
         """
+        if pkg in self.no_pip_install:
+            self._logger.debug("_install_pkg() %s is in the no install list. Not Installing and continuing.", pkg)
+            return True
+
         auto_target = False
         if self.config.auto_install_in_site_packages:
             if self.config.site_packages:
@@ -807,5 +814,9 @@ class InstallPkg:
         return self._logger
 
     @property
-    def no_pip_remove(self) -> set:
+    def no_pip_remove(self) -> Set[str]:
         return self._no_pip_remove
+
+    @property
+    def no_pip_install(self) -> Set[str]:
+        return self._no_pip_install

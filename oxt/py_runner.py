@@ -45,7 +45,7 @@ from ___lo_pip___.events.lo_events import LoEvents
 from ___lo_pip___.events.args.event_args import EventArgs
 from ___lo_pip___.events.startup.startup_monitor import StartupMonitor
 from ___lo_pip___.events.named_events.startup_events import StartupNamedEvent
-from ___lo_pip___.settings.install_settings import InstallSettings
+# from ___lo_pip___.settings.install_settings import InstallSettings
 
 # endregion imports
 
@@ -155,12 +155,6 @@ class ___lo_implementation_name___(unohelper.Base, XJob):  # noqa: N801
             if self._config.log_level < 20:  # Less than INFO
                 self._show_extra_debug_info()
                 # self._config.extension_info.log_extensions(self._logger)
-
-            # Update the config with the install settings
-            # If ooo-dev-tools or odfpy is set to not install by a user, then remove it from the config.
-            # This must be done before Requirements Check.
-            install_settings = InstallSettings()
-            install_settings.update_config()
 
             requirements_met = False
             if self._requirements_check.check_requirements() is True and not self._config.has_locals:
